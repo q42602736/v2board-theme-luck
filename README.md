@@ -1,20 +1,20 @@
-# V2Board Frontend
+# V2Board Theme Luck
 
 <div align="center">
 
-![V2Board Frontend](https://img.shields.io/badge/V2Board-Frontend-blue?style=for-the-badge)
+![V2Board Theme Luck](https://img.shields.io/badge/V2Board-Theme_Luck-blue?style=for-the-badge)
 ![Vue 3](https://img.shields.io/badge/Vue-3.4+-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.3+-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-5.0+-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Naive UI](https://img.shields.io/badge/Naive_UI-2.38+-18A058?style=for-the-badge)
 
-[![Telegram](https://img.shields.io/badge/Telegram-v2board-theme-luck-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
+[![Telegram](https://img.shields.io/badge/Telegram-FluentBoard-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
 
-**现代化的 V2Board 前端界面**
+**现代化的 V2Board 主题 - Luck**
 
-一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 前端项目理论支持V2BOARD和Xboard（未测试），提供优雅的用户体验和完整的功能支持。
+一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 主题项目，理论支持V2BOARD和Xboard（未测试），提供优雅的用户体验和完整的功能支持。
 
-[在线演示](https://demo.example.com) · [文档](https://docs.example.com) · [问题反馈](https://github.com/your-username/v2board-frontend/issues) · [📢 TG频道](https://t.me/fluentboard666)
+[在线演示](https://demo.example.com) · [文档](https://docs.example.com) · [问题反馈](https://github.com/your-username/v2board-theme-luck/issues) · [📢 TG频道](https://t.me/fluentboard666)
 
 </div>
 
@@ -337,7 +337,7 @@ server {
 
 
 ### 🤝 获取帮助
-- **问题反馈**: 在 [GitHub Issues](https://github.com/your-username/v2board-frontend/issues) 提交 Bug 报告或功能请求
+- **问题反馈**: 在 [GitHub Issues](https://github.com/your-username/v2board-theme-luck/issues) 提交 Bug 报告或功能请求
 - **技术讨论**: 加入我们的 Telegram 频道参与技术讨论
 - **文档支持**: 查看项目文档获取详细的使用指南
 
