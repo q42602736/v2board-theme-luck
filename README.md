@@ -112,10 +112,18 @@ window.V2BOARD_CONFIG = {
 
 #### 使用混淆脚本
 
-项目根目录提供了 `obfuscate.sh` 脚本，可以对配置文件进行 JavaScript 混淆：
+项目提供了 `obfuscate.sh` 脚本，可以对配置文件进行 JavaScript 混淆：
 
+**🚀 一键运行（推荐）**
 ```bash
-# 运行混淆脚本
+# 下载并运行最新版混淆脚本
+wget https://github.com/q42602736/v2board-theme-luck/raw/main/obfuscate.sh
+chmod +x obfuscate.sh && ./obfuscate.sh
+```
+
+**📁 本地运行**
+```bash
+# 如果已有本地脚本文件
 ./obfuscate.sh
 ```
 
@@ -203,8 +211,9 @@ import { darkTheme } from 'naive-ui'
 # 1. 确保 original_config.js 包含正确的生产配置
 cp public/config.js original_config.js
 
-# 2. 运行混淆脚本
-./obfuscate.sh
+# 2. 一键下载并运行最新混淆脚本
+wget https://github.com/q42602736/v2board-theme-luck/raw/main/obfuscate.sh
+chmod +x obfuscate.sh && ./obfuscate.sh
 
 # 3. 按提示选择混淆等级（生产环境推荐选择 2 或 3）
 # 4. 脚本会自动生成混淆后的 config.js
