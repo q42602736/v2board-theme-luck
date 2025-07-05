@@ -8,7 +8,7 @@
 ![Vite](https://img.shields.io/badge/Vite-5.0+-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Naive UI](https://img.shields.io/badge/Naive_UI-2.38+-18A058?style=for-the-badge)
 
-[![Telegram](https://img.shields.io/badge/Telegram-FluentBoard-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
+[![Telegram](https://img.shields.io/badge/Telegram-v2board-theme-luck-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
 
 **现代化的 V2Board 前端界面**
 
