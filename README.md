@@ -8,7 +8,7 @@
 ![Vite](https://img.shields.io/badge/Vite-5.0+-646CFF?style=for-the-badge&logo=vite&logoColor=white)
 ![Naive UI](https://img.shields.io/badge/Naive_UI-2.38+-18A058?style=for-the-badge)
 
-[![Telegram](https://img.shields.io/badge/Telegram-FluentBoard-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
+[![Telegram](https://img.shields.io/badge/Telegram-Theme_Luck-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
 
 **现代化的 V2Board 主题 - Luck**
 
@@ -337,7 +337,7 @@ server {
 
 
 ### 🤝 获取帮助
-- **问题反馈**: 在 [GitHub Issues](https://github.com/your-username/v2board-theme-luck/issues) 提交 Bug 报告或功能请求
+- **问题反馈**: 在 [GitHub Issues](https://github.com/q42602736/v2board-theme-luck/issues) 提交 Bug 报告或功能请求
 - **技术讨论**: 加入我们的 Telegram 频道参与技术讨论
 - **文档支持**: 查看项目文档获取详细的使用指南
 
