@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <!-- 蓝色背景 -->
+  <rect width="60" height="40" fill="#0048E0"/>
+  
+  <!-- 白色十字 -->
+  <rect x="18" y="0" width="6" height="40" fill="#FFFFFF"/>
+  <rect x="0" y="17" width="60" height="6" fill="#FFFFFF"/>
+  
+  <!-- 红色十字 -->
+  <rect x="20" y="0" width="2" height="40" fill="#D72828"/>
+  <rect x="0" y="19" width="60" height="2" fill="#D72828"/>
+</svg>

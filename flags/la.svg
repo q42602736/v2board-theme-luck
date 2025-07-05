@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <!-- 红色条纹 -->
+  <rect width="60" height="12" fill="#CE1126"/>
+  <rect y="28" width="60" height="12" fill="#CE1126"/>
+  
+  <!-- 蓝色中央条纹 -->
+  <rect y="12" width="60" height="16" fill="#002868"/>
+  
+  <!-- 白色圆圈 -->
+  <circle cx="30" cy="20" r="6" fill="#FFFFFF"/>
+</svg>

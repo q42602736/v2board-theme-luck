@@ -1,0 +1,502 @@
+
+/* 消息容器 */
+.custom-message-container[data-v-a328c8ec] {
+  position: fixed;
+  top: 60px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+  max-width: 380px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+/* iOS 风格消息卡片 */
+.custom-message[data-v-a328c8ec] {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px 24px;
+  margin: 0;
+  width: 100%;
+  max-width: 380px;
+
+  /* iOS 毛玻璃效果 */
+  background: rgba(255, 255, 255, 0.88);
+  backdrop-filter: blur(40px) saturate(200%);
+  -webkit-backdrop-filter: blur(40px) saturate(200%);
+
+  /* iOS 圆角 */
+  border-radius: 20px;
+
+  /* iOS 边框 */
+  border: 0.5px solid rgba(255, 255, 255, 0.6);
+
+  /* iOS 阴影系统 */
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02);
+
+  pointer-events: auto;
+  overflow: hidden;
+
+  /* iOS 文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* 微妙的内部光泽 */
+  isolation: isolate;
+}
+
+/* 内部光泽效果 */
+.custom-message[data-v-a328c8ec]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.8) 20%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(255, 255, 255, 0.8) 80%,
+    transparent 100%);
+  z-index: 1;
+}
+
+/* 底部微妙阴影 */
+.custom-message[data-v-a328c8ec]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(0, 0, 0, 0.05) 20%,
+    rgba(0, 0, 0, 0.08) 50%,
+    rgba(0, 0, 0, 0.05) 80%,
+    transparent 100%);
+  z-index: 1;
+}
+
+/* iOS 风格消息图标 */
+.message-icon[data-v-a328c8ec] {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  font-size: 18px;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+
+  /* iOS 图标背景 */
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(10px);
+  border: 0.5px solid rgba(255, 255, 255, 0.4);
+
+  /* 微妙的内阴影 */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* iOS 风格消息内容 */
+.message-content[data-v-a328c8ec] {
+  flex: 1;
+  min-width: 0;
+  position: relative;
+  z-index: 2;
+}
+.message-title[data-v-a328c8ec] {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 6px;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+
+  /* iOS 文字效果 */
+  text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.8);
+}
+.message-text[data-v-a328c8ec] {
+  font-size: 15px;
+  color: #48484a;
+  line-height: 1.35;
+  word-wrap: break-word;
+  letter-spacing: -0.01em;
+  font-weight: 500;
+
+  /* iOS 文字效果 */
+  text-shadow: 0 0.5px 1px rgba(255, 255, 255, 0.6);
+}
+
+/* iOS 风格关闭按钮 */
+.message-close[data-v-a328c8ec] {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(10px);
+  border: 0.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  color: #8e8e93;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  font-size: 14px;
+  margin-top: 0;
+  position: relative;
+  z-index: 2;
+
+  /* iOS 按钮阴影 */
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.03),
+    0 2px 4px rgba(0, 0, 0, 0.05);
+}
+.message-close[data-v-a328c8ec]:hover {
+  background: rgba(255, 255, 255, 0.6);
+  color: #48484a;
+  transform: scale(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05),
+    0 4px 8px rgba(0, 0, 0, 0.08);
+}
+.message-close[data-v-a328c8ec]:active {
+  transform: scale(0.95);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* iOS 风格进度条 */
+.message-progress[data-v-a328c8ec] {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #007AFF 0%,
+    #5AC8FA 50%,
+    #007AFF 100%);
+  border-radius: 0 0 20px 20px;
+  animation: progress-a328c8ec linear;
+  transform-origin: left;
+  z-index: 3;
+
+  /* 更明显的光泽效果 */
+  box-shadow:
+    0 -1px 2px rgba(0, 122, 255, 0.3),
+    0 0 8px rgba(0, 122, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+
+  /* 微妙的发光动画 */
+  animation: progress-a328c8ec linear,progressGlow-a328c8ec 2s ease-in-out infinite;
+}
+
+/* 成功消息的进度条 */
+.custom-message--success .message-progress[data-v-a328c8ec] {
+  background: linear-gradient(90deg,
+    #30D158 0%,
+    #32D74B 50%,
+    #30D158 100%);
+  box-shadow:
+    0 -1px 2px rgba(52, 199, 89, 0.3),
+    0 0 8px rgba(52, 199, 89, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 错误消息的进度条 */
+.custom-message--error .message-progress[data-v-a328c8ec] {
+  background: linear-gradient(90deg,
+    #FF453A 0%,
+    #FF6961 50%,
+    #FF453A 100%);
+  box-shadow:
+    0 -1px 2px rgba(255, 59, 48, 0.3),
+    0 0 8px rgba(255, 59, 48, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+/* 警告消息的进度条 */
+.custom-message--warning .message-progress[data-v-a328c8ec] {
+  background: linear-gradient(90deg,
+    #FF9F0A 0%,
+    #FFB340 50%,
+    #FF9F0A 100%);
+  box-shadow:
+    0 -1px 2px rgba(255, 149, 0, 0.3),
+    0 0 8px rgba(255, 149, 0, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+@keyframes progress-a328c8ec {
+from {
+    width: 100%;
+    opacity: 1;
+}
+85% {
+    opacity: 1;
+}
+to {
+    width: 0%;
+    opacity: 0.2;
+}
+}
+@keyframes progressGlow-a328c8ec {
+0%, 100% {
+    filter: brightness(1);
+}
+50% {
+    filter: brightness(1.2);
+}
+}
+
+/* iOS 成功消息样式 */
+.custom-message--success[data-v-a328c8ec] {
+  background: rgba(255, 255, 255, 0.92);
+  border: 0.5px solid rgba(52, 199, 89, 0.15);
+
+  /* 微妙的绿色光晕 */
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02),
+    0 0 0 1px rgba(52, 199, 89, 0.05);
+}
+.custom-message--success .message-icon[data-v-a328c8ec] {
+  color: #30D158;
+  background: rgba(52, 199, 89, 0.12);
+  border-color: rgba(52, 199, 89, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(52, 199, 89, 0.08),
+    0 2px 8px rgba(52, 199, 89, 0.12);
+}
+
+/* iOS 错误消息样式 */
+.custom-message--error[data-v-a328c8ec] {
+  background: rgba(255, 255, 255, 0.92);
+  border: 0.5px solid rgba(255, 59, 48, 0.15);
+
+  /* 微妙的红色光晕 */
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02),
+    0 0 0 1px rgba(255, 59, 48, 0.05);
+}
+.custom-message--error .message-icon[data-v-a328c8ec] {
+  color: #FF453A;
+  background: rgba(255, 59, 48, 0.12);
+  border-color: rgba(255, 59, 48, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(255, 59, 48, 0.08),
+    0 2px 8px rgba(255, 59, 48, 0.12);
+}
+
+/* iOS 警告消息样式 */
+.custom-message--warning[data-v-a328c8ec] {
+  background: rgba(255, 255, 255, 0.92);
+  border: 0.5px solid rgba(255, 149, 0, 0.15);
+
+  /* 微妙的橙色光晕 */
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02),
+    0 0 0 1px rgba(255, 149, 0, 0.05);
+}
+.custom-message--warning .message-icon[data-v-a328c8ec] {
+  color: #FF9F0A;
+  background: rgba(255, 149, 0, 0.12);
+  border-color: rgba(255, 149, 0, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(255, 149, 0, 0.08),
+    0 2px 8px rgba(255, 149, 0, 0.12);
+}
+
+/* iOS 信息消息样式 */
+.custom-message--info[data-v-a328c8ec] {
+  background: rgba(255, 255, 255, 0.92);
+  border: 0.5px solid rgba(0, 122, 255, 0.15);
+
+  /* 微妙的蓝色光晕 */
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.12),
+    0 16px 32px rgba(0, 0, 0, 0.08),
+    0 8px 16px rgba(0, 0, 0, 0.04),
+    0 4px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.02),
+    0 0 0 1px rgba(0, 122, 255, 0.05);
+}
+.custom-message--info .message-icon[data-v-a328c8ec] {
+  color: #007AFF;
+  background: rgba(0, 122, 255, 0.12);
+  border-color: rgba(0, 122, 255, 0.25);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 122, 255, 0.08),
+    0 2px 8px rgba(0, 122, 255, 0.12);
+}
+
+/* iOS 风格动画效果 */
+.message-enter-active[data-v-a328c8ec] {
+  transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.message-leave-active[data-v-a328c8ec] {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.message-enter-from[data-v-a328c8ec] {
+  opacity: 0;
+  transform: translateY(-120%) scale(0.85);
+  filter: blur(8px);
+}
+.message-leave-to[data-v-a328c8ec] {
+  opacity: 0;
+  transform: translateY(-80%) scale(0.9);
+  filter: blur(4px);
+}
+.message-move[data-v-a328c8ec] {
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* 入场时的弹性效果 */
+.message-enter-active .custom-message[data-v-a328c8ec] {
+  animation: messageSlideIn-a328c8ec 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes messageSlideIn-a328c8ec {
+0% {
+    transform: translateY(-40px) scale(0.9);
+    opacity: 0;
+}
+60% {
+    transform: translateY(8px) scale(1.02);
+    opacity: 0.8;
+}
+100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+}
+}
+
+/* iOS 响应式设计 */
+@media (max-width: 480px) {
+.custom-message-container[data-v-a328c8ec] {
+    top: 20px;
+    left: 16px;
+    right: 16px;
+    transform: none;
+    max-width: none;
+    gap: 8px;
+}
+.custom-message[data-v-a328c8ec] {
+    min-width: auto;
+    max-width: none;
+    padding: 18px 20px;
+    border-radius: 18px;
+}
+.message-icon[data-v-a328c8ec] {
+    width: 28px;
+    height: 28px;
+    font-size: 16px;
+}
+.message-title[data-v-a328c8ec] {
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+.message-text[data-v-a328c8ec] {
+    font-size: 14px;
+    line-height: 1.3;
+}
+.message-close[data-v-a328c8ec] {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+}
+.message-progress[data-v-a328c8ec] {
+    height: 2px;
+    border-radius: 0 0 18px 18px;
+}
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+.custom-message-container[data-v-a328c8ec] {
+    top: 16px;
+    left: 12px;
+    right: 12px;
+}
+.custom-message[data-v-a328c8ec] {
+    padding: 16px 18px;
+    gap: 12px;
+}
+.message-title[data-v-a328c8ec] {
+    font-size: 14px;
+}
+.message-text[data-v-a328c8ec] {
+    font-size: 13px;
+}
+}
+
+.captcha-widget[data-v-ecc224f8] {
+  display: flex;
+  justify-content: center;
+  margin: 16px 0;
+}
+.turnstile-widget[data-v-ecc224f8],
+.recaptcha-widget[data-v-ecc224f8] {
+  /* 移除所有外层样式，让验证码本身显示 */
+}
+
+/* 让验证码使用原生样式，只添加圆角 */
+.turnstile-widget[data-v-ecc224f8] .cf-turnstile,
+.recaptcha-widget[data-v-ecc224f8] .g-recaptcha {
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* 删除了调试相关样式 */
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+.captcha-widget[data-v-ecc224f8] {
+    margin: 12px 0;
+}
+
+  /* 移动端圆角 */
+.turnstile-widget[data-v-ecc224f8] .cf-turnstile,
+  .recaptcha-widget[data-v-ecc224f8] .g-recaptcha {
+    border-radius: 10px !important;
+}
+}

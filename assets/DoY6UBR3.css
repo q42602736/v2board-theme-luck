@@ -1,0 +1,215 @@
+
+/* 移动端Sheet遮罩 */
+.mobile-sheet-overlay[data-v-e9009c62] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 999999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+/* 移动端Sheet主体 */
+.mobile-sheet[data-v-e9009c62] {
+  background: #f8f9fa;
+  width: 100%;
+  max-width: 400px;
+  border-radius: 24px;
+  max-height: 80vh;
+  overflow: visible;
+  animation: modalFadeIn-e9009c62 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.16), 0 4px 16px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  margin: 0 auto;
+}
+
+/* Sheet高度变体 */
+.mobile-sheet.sheet-half[data-v-e9009c62] {
+  max-height: 50vh;
+}
+.mobile-sheet.sheet-full[data-v-e9009c62] {
+  max-height: 90vh;
+  border-radius: 20px;
+  margin: 20px;
+  width: calc(100% - 40px);
+}
+
+/* 淡入缩放动画 */
+@keyframes modalFadeIn-e9009c62 {
+from {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+}
+to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+}
+
+/* 拖拽指示器（居中模态框样式） */
+.sheet-handle[data-v-e9009c62] {
+  width: 40px;
+  height: 5px;
+  background: #c7c7cc;
+  border-radius: 3px;
+  margin: 16px auto 8px;
+  flex-shrink: 0;
+  opacity: 0.4;
+  transition: opacity 0.2s ease;
+}
+.sheet-handle[data-v-e9009c62]:hover {
+  opacity: 0.6;
+}
+
+/* 标题区域 */
+.sheet-header[data-v-e9009c62] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px 16px;
+  background: #f8f9fa;
+  flex-shrink: 0;
+  position: relative;
+}
+.sheet-header[data-v-e9009c62]::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 24px;
+  right: 24px;
+  height: 0.5px;
+  background: rgba(60, 60, 67, 0.12);
+}
+.sheet-title[data-v-e9009c62] {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.4px;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', 'Hiragino Sans GB', sans-serif;
+}
+.sheet-close-btn[data-v-e9009c62] {
+  background: #f1f1f1;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: #666;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sheet-close-btn[data-v-e9009c62]:hover {
+  background: #e5e5e5;
+  transform: scale(1.05);
+}
+.sheet-close-btn[data-v-e9009c62]:active {
+  background: #d1d1d1;
+  transform: scale(0.95);
+}
+
+/* 内容区域 */
+.sheet-content[data-v-e9009c62] {
+  flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  min-height: 0;
+  background: white;
+  border-radius: 16px 16px 0 0;
+  margin-top: 8px;
+  position: relative;
+  touch-action: pan-y;
+  overscroll-behavior: contain;
+}
+.sheet-content[data-v-e9009c62]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.05), transparent);
+}
+
+/* 底部区域 */
+.sheet-safe-area[data-v-e9009c62] {
+  height: 20px;
+  background: white;
+  flex-shrink: 0;
+  border-top: 0.5px solid rgba(60, 60, 67, 0.08);
+  border-radius: 0 0 24px 24px;
+}
+
+/* 响应式优化 */
+@media (max-width: 375px) {
+.mobile-sheet-overlay[data-v-e9009c62] {
+    padding: 16px;
+}
+.mobile-sheet[data-v-e9009c62] {
+    max-width: none;
+    width: 100%;
+}
+.sheet-header[data-v-e9009c62] {
+    padding: 0 20px 12px;
+}
+.sheet-title[data-v-e9009c62] {
+    font-size: 18px;
+}
+}
+
+/* 横屏模式优化 */
+@media (orientation: landscape) and (max-height: 500px) {
+.mobile-sheet[data-v-e9009c62] {
+    max-height: 70vh;
+}
+.mobile-sheet-overlay[data-v-e9009c62] {
+    padding: 12px;
+}
+}
+
+/* 超小屏幕优化 */
+@media (max-height: 600px) {
+.mobile-sheet[data-v-e9009c62] {
+    max-height: 85vh;
+}
+}
+
+/* 全局滚动锁定样式 - 使用最高优先级 */
+html.modal-open,
+html.modal-open body {
+  overflow: hidden !important;
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+}
+body.modal-open {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+  height: 100% !important;
+  top: var(--scroll-top, 0px) !important;
+  left: 0px !important;
+  right: 0px !important;
+  -webkit-overflow-scrolling: auto !important;
+  overscroll-behavior: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* 模态框内容区域允许垂直滚动 */
+body.modal-open .sheet-content {
+  touch-action: pan-y !important;
+  -webkit-overflow-scrolling: touch !important;
+  overscroll-behavior: contain !important;
+}
+

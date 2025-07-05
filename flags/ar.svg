@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <rect width="60" height="13.33" fill="#74ACDF"/>
+  <rect y="13.33" width="60" height="13.33" fill="#FFFFFF"/>
+  <rect y="26.67" width="60" height="13.33" fill="#74ACDF"/>
+  
+  <!-- 太阳 -->
+  <g fill="#FCDD09" transform="translate(30,20)">
+    <circle r="4" fill="#FCDD09"/>
+    <g stroke="#FCDD09" stroke-width="0.5">
+      <line x1="0" y1="-6" x2="0" y2="-5"/>
+      <line x1="3" y1="-5.2" x2="2.6" y2="-4.3"/>
+      <line x1="5.2" y1="-3" x2="4.3" y2="-2.6"/>
+      <line x1="6" y1="0" x2="5" y2="0"/>
+      <line x1="5.2" y1="3" x2="4.3" y2="2.6"/>
+      <line x1="3" y1="5.2" x2="2.6" y2="4.3"/>
+      <line x1="0" y1="6" x2="0" y2="5"/>
+      <line x1="-3" y1="5.2" x2="-2.6" y2="4.3"/>
+      <line x1="-5.2" y1="3" x2="-4.3" y2="2.6"/>
+      <line x1="-6" y1="0" x2="-5" y2="0"/>
+      <line x1="-5.2" y1="-3" x2="-4.3" y2="-2.6"/>
+      <line x1="-3" y1="-5.2" x2="-2.6" y2="-4.3"/>
+    </g>
+  </g>
+</svg>

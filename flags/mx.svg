@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <rect width="20" height="40" fill="#006847"/>
+  <rect x="20" width="20" height="40" fill="#FFFFFF"/>
+  <rect x="40" width="20" height="40" fill="#CE1126"/>
+  
+  <!-- 简化的墨西哥国徽 -->
+  <g fill="#8B4513" transform="translate(30,20)">
+    <ellipse rx="3" ry="2" fill="#8B4513"/>
+    <circle cx="0" cy="-1" r="1.5" fill="#228B22"/>
+  </g>
+</svg>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <!-- 蓝色条纹 -->
+  <rect width="60" height="8" fill="#024FA2"/>
+  <rect y="32" width="60" height="8" fill="#024FA2"/>
+  
+  <!-- 白色条纹 -->
+  <rect y="8" width="60" height="2" fill="#FFFFFF"/>
+  <rect y="30" width="60" height="2" fill="#FFFFFF"/>
+  
+  <!-- 红色中央条纹 -->
+  <rect y="10" width="60" height="20" fill="#ED1C27"/>
+  
+  <!-- 白色圆圈 -->
+  <circle cx="20" cy="20" r="8" fill="#FFFFFF"/>
+  
+  <!-- 红色五角星 -->
+  <g fill="#ED1C27">
+    <path d="M20,14 L21.5,18 L25.5,18 L22.25,20.5 L23.75,24.5 L20,22 L16.25,24.5 L17.75,20.5 L14.5,18 L18.5,18 Z"/>
+  </g>
+</svg>

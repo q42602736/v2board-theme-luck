@@ -1,0 +1,52 @@
+
+.profile-page[data-v-090069e3] {
+  padding: 24px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+[data-v-090069e3] .n-card {
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+[data-v-090069e3] .n-card-header {
+  padding: 24px 24px 0;
+  font-weight: 600;
+  font-size: 18px;
+  color: #1f2937;
+}
+[data-v-090069e3] .n-card__content {
+  padding: 24px;
+}
+[data-v-090069e3] .n-form-item-label {
+  font-weight: 500;
+  color: #374151;
+}
+[data-v-090069e3] .n-input {
+  border-radius: 8px;
+}
+[data-v-090069e3] .n-button {
+  border-radius: 8px;
+  font-weight: 500;
+}
+[data-v-090069e3] .n-alert {
+  border-radius: 12px;
+  border: none;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+.profile-page[data-v-090069e3] {
+    padding: 16px;
+}
+[data-v-090069e3] .n-card-header {
+    padding: 20px 20px 0;
+    font-size: 16px;
+}
+[data-v-090069e3] .n-card__content {
+    padding: 20px;
+}
+[data-v-090069e3] .n-form {
+    --n-label-width: 100px !important;
+}
+}

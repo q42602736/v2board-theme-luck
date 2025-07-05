@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <!-- 绿色背景 -->
+  <rect width="60" height="40" fill="#009739"/>
+  
+  <!-- 黄色菱形 -->
+  <path d="M30,5 L50,20 L30,35 L10,20 Z" fill="#FEDD00"/>
+  
+  <!-- 蓝色圆圈 -->
+  <circle cx="30" cy="20" r="7" fill="#012169"/>
+  
+  <!-- 白色横幅 -->
+  <path d="M25,18 Q30,16 35,18 Q30,22 25,18" fill="#FFFFFF"/>
+</svg>

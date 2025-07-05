@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 40">
+  <rect width="60" height="40" fill="#DE2910"/>
+  <g fill="#FFFFFF">
+    <!-- 紫荆花中心 -->
+    <circle cx="30" cy="20" r="8" fill="none" stroke="#FFFFFF" stroke-width="0.5"/>
+    <!-- 五片花瓣 -->
+    <g transform="translate(30,20)">
+      <path d="M0,-6 L2,-2 L6,-4 L2,0 L4,4 L0,2 L-4,4 L-2,0 L-6,-4 L-2,-2 Z" fill="#FFFFFF"/>
+      <path d="M0,-6 L2,-2 L6,-4 L2,0 L4,4 L0,2 L-4,4 L-2,0 L-6,-4 L-2,-2 Z" fill="#FFFFFF" transform="rotate(72)"/>
+      <path d="M0,-6 L2,-2 L6,-4 L2,0 L4,4 L0,2 L-4,4 L-2,0 L-6,-4 L-2,-2 Z" fill="#FFFFFF" transform="rotate(144)"/>
+      <path d="M0,-6 L2,-2 L6,-4 L2,0 L4,4 L0,2 L-4,4 L-2,0 L-6,-4 L-2,-2 Z" fill="#FFFFFF" transform="rotate(216)"/>
+      <path d="M0,-6 L2,-2 L6,-4 L2,0 L4,4 L0,2 L-4,4 L-2,0 L-6,-4 L-2,-2 Z" fill="#FFFFFF" transform="rotate(288)"/>
+    </g>
+    <!-- 五颗星星 -->
+    <g fill="#FFFFFF">
+      <path d="M30,8 L31,11 L34,11 L31.5,13 L32.5,16 L30,14 L27.5,16 L28.5,13 L26,11 L29,11 Z"/>
+      <path d="M42,12 L42.5,13.5 L44,13.5 L42.8,14.5 L43.3,16 L42,15 L40.7,16 L41.2,14.5 L40,13.5 L41.5,13.5 Z"/>
+      <path d="M42,28 L42.5,26.5 L44,26.5 L42.8,25.5 L43.3,24 L42,25 L40.7,24 L41.2,25.5 L40,26.5 L41.5,26.5 Z"/>
+      <path d="M18,28 L18.5,26.5 L20,26.5 L18.8,25.5 L19.3,24 L18,25 L16.7,24 L17.2,25.5 L16,26.5 L17.5,26.5 Z"/>
+      <path d="M18,12 L18.5,13.5 L20,13.5 L18.8,14.5 L19.3,16 L18,15 L16.7,16 L17.2,14.5 L16,13.5 L17.5,13.5 Z"/>
+    </g>
+  </g>
+</svg>

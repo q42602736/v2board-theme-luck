@@ -1,0 +1,372 @@
+
+/* 组件特定样式，主要样式由外部CSS文件提供 */
+.zhujike-theme[data-v-5b86105c] {
+  width: 100%;
+  height: 100%;
+}
+
+/* 确保路由链接样式正确 */
+.zhujike-theme a[data-v-5b86105c] {
+  text-decoration: none;
+}
+.zhujike-theme .login-link[data-v-5b86105c],
+.zhujike-theme .link-reg[data-v-5b86105c],
+.zhujike-theme .button[data-v-5b86105c] {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.zhujike-theme .login-link[data-v-5b86105c]:hover,
+.zhujike-theme .link-reg[data-v-5b86105c]:hover,
+.zhujike-theme .button[data-v-5b86105c]:hover {
+  opacity: 0.8;
+}
+
+/* 确保路由链接样式正确 */
+.cool-theme a[data-v-7ffba1a0] {
+  text-decoration: none;
+}
+.cool-theme .go-top[data-v-7ffba1a0] {
+  cursor: pointer;
+}
+
+/* 隐藏CSS加载器 */
+#css-loader[data-v-7ffba1a0] {
+  display: none;
+}
+
+/* Wukong主题样式将由外部CSS文件提供 */
+.wukong-theme[data-v-49fac8ae] {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* 隐藏CSS加载器 */
+#css-loader[data-v-49fac8ae] {
+  display: none;
+}
+
+/* 确保路由链接样式正确 */
+.wukong-theme a[data-v-49fac8ae] {
+  text-decoration: none;
+}
+
+/* 确保导航栏正确布局 */
+.wukong-theme .navbar[data-v-49fac8ae] {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+.wukong-theme .navbar-header[data-v-49fac8ae] {
+  flex: 0 0 auto !important;
+}
+.wukong-theme .navbar-collapse[data-v-49fac8ae] {
+  display: flex !important;
+  flex: 1 !important;
+  justify-content: flex-end !important;
+}
+.wukong-theme .navbar-nav[data-v-49fac8ae] {
+  display: flex !important;
+  flex-direction: row !important;
+  margin: 0 !important;
+}
+.wukong-theme .navbar-nav > li[data-v-49fac8ae] {
+  display: inline-block !important;
+  float: none !important;
+  margin-left: 15px !important;
+}
+.wukong-theme .navbar-brand[data-v-49fac8ae] {
+  float: none !important;
+  display: block !important;
+}
+
+/* 确保图片响应式 */
+.wukong-theme img[data-v-49fac8ae] {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 移除service-icon相关样式，因为没有图片 */
+.wukong-theme .service-icon[data-v-49fac8ae] {
+  display: none;
+}
+
+/* 确保Tab内容正确显示/隐藏 */
+.wukong-theme .tab-pane[data-v-49fac8ae] {
+  display: block !important;
+}
+.wukong-theme .tab-pane[style*="display: none"][data-v-49fac8ae] {
+  display: none !important;
+}
+
+/* Malio 主题样式已在 index.html 中引用，避免重复引用 */
+
+/* 原始模板中的内联样式 */
+.pricing {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.03);
+  background-color: #fff;
+  border-radius: 3px;
+  border: none;
+  position: relative;
+  margin-bottom: 30px;
+  text-align: center;
+}
+.pricing.pricing-highlight .pricing-title {
+  background-color: #6777ef;
+  color: #fff;
+}
+.pricing.pricing-highlight .pricing-cta a {
+  background-color: #6777ef;
+  color: #fff;
+}
+.pricing.pricing-highlight .pricing-cta a:hover {
+  background-color: #394eea !important;
+}
+.pricing .pricing-padding {
+  padding: 40px;
+}
+.pricing .pricing-title {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  background-color: #f3f6f8;
+  color: #6777ef;
+  border-radius: 0 0 3px 3px;
+  display: inline-block;
+  padding: 5px 15px;
+}
+.pricing .pricing-price {
+  margin-bottom: 45px;
+  color: #6c757d;
+}
+.pricing .pricing-price div:first-child {
+  font-weight: 600;
+  font-size: 50px;
+}
+.pricing .pricing-details {
+  text-align: left;
+  display: inline-block;
+  color: #6c757d;
+}
+.pricing .pricing-details .pricing-item {
+  display: flex;
+  margin-bottom: 15px;
+}
+.pricing .pricing-details .pricing-item .pricing-item-icon {
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+  text-align: center;
+  background-color: #63ed7a;
+  color: #fff;
+  margin-right: 10px;
+}
+.pricing .pricing-details .pricing-item .pricing-item-icon i {
+  font-size: 11px;
+}
+.pricing .pricing-cta {
+  margin-top: 20px;
+}
+.pricing .pricing-cta a {
+  display: block;
+  padding: 20px 40px;
+  background-color: #f3f6f8;
+  text-transform: uppercase;
+  letter-spacing: 2.5px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 0 0 3px 3px;
+  color: inherit;
+}
+.pricing .pricing-cta a .fas,
+.pricing .pricing-cta a .far,
+.pricing .pricing-cta a .fab,
+.pricing .pricing-cta a .fal,
+.pricing .pricing-cta a .ion {
+  margin-left: 5px;
+}
+.pricing .pricing-cta a:hover {
+  background-color: #e3eaef;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* 额外的样式补充 */
+.section-dark {
+  background-color: #2d3748;
+  color: white;
+  padding: 100px 0;
+}
+.section-dark blockquote {
+  font-size: 1.5rem;
+  font-style: italic;
+  border: none;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
+  color: white;
+}
+.text-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: white;
+}
+.text-job {
+  color: rgba(255,255,255,0.7);
+  font-size: 0.9rem;
+}
+.download-section {
+  padding: 80px 0;
+}
+.before-footer {
+  padding: 100px 0;
+  background-color: #f8f9fa;
+}
+.card {
+  border: none;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  margin-bottom: 30px;
+}
+.long-shadow {
+  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+}
+.p-45 {
+  padding: 45px;
+}
+.card-body.d-flex {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.lh-sm {
+  line-height: 1.4;
+}
+.link-icon {
+  color: #6777ef;
+  text-decoration: none;
+  font-weight: 600;
+}
+.link-icon:hover {
+  color: #5a67d8;
+  text-decoration: none;
+}
+footer {
+  background-color: #2d3748;
+  color: white;
+  padding: 60px 0 30px;
+}
+footer h3,
+footer h4 {
+  color: white;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+footer ul {
+  list-style: none;
+  padding: 0;
+}
+footer ul li {
+  margin-bottom: 8px;
+}
+footer ul li a {
+  color: #a0aec0;
+  text-decoration: none;
+}
+footer ul li a:hover {
+  color: white;
+}
+.social-links a {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  background-color: #4a5568;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 40px;
+  color: white;
+  text-decoration: none;
+  margin-right: 10px;
+  transition: all 0.3s;
+}
+.social-links a:hover {
+  background-color: #6777ef;
+  transform: translateY(-2px);
+  color: white;
+  text-decoration: none;
+}
+
+/* list-icons 样式 */
+.list-icons {
+  padding: 0;
+  margin: 0;
+  margin-top: 30px;
+}
+.list-icons li {
+  display: flex;
+  margin-bottom: 25px;
+  align-items: center;
+}
+.list-icons li .card-icon {
+  height: 50px;
+  width: 50px;
+  line-height: 52px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+.list-icons li span:last-child {
+  line-height: 24px;
+  flex: 1;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+.hero h1 {
+    font-size: 2.5rem;
+}
+.features {
+    grid-template-columns: 1fr;
+    gap: 30px;
+}
+.hero .container {
+    flex-direction: column;
+    text-align: center;
+}
+.section-design {
+    padding: 60px 0;
+}
+.bg-gr {
+    padding: 60px 0;
+}
+.section-dark {
+    padding: 60px 0;
+}
+.download-section {
+    padding: 50px 0;
+    text-align: center;
+}
+.before-footer {
+    padding: 60px 0;
+}
+footer {
+    padding: 40px 0 20px;
+    text-align: center;
+}
+}

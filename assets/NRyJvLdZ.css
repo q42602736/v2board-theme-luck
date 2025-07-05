@@ -1,0 +1,1153 @@
+
+/* 服务条款内容样式 */
+.terms-content[data-v-341fef73] {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding: 0 4px;
+  line-height: 1.6;
+  color: #3c3c43;
+  
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* 标题样式 */
+.terms-content[data-v-341fef73] h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 24px 0 12px 0;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.terms-content[data-v-341fef73] h3:first-child {
+  margin-top: 0;
+}
+
+/* 段落样式 */
+.terms-content[data-v-341fef73] p {
+  margin: 12px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* 列表样式 */
+.terms-content[data-v-341fef73] ul {
+  margin: 12px 0;
+  padding-left: 20px;
+}
+.terms-content[data-v-341fef73] li {
+  margin: 8px 0;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+/* 强调文本样式 */
+.terms-content[data-v-341fef73] strong {
+  font-weight: 600;
+  color: #1d1d1f;
+}
+
+/* 底部按钮区域 */
+.terms-footer[data-v-341fef73] {
+  display: flex;
+  justify-content: center;
+  padding-top: 16px;
+}
+
+/* iOS 风格关闭按钮 */
+.terms-close-button[data-v-341fef73] {
+  min-width: 160px;
+  height: 44px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  border: none;
+  box-shadow: 
+    0 8px 24px rgba(0, 122, 255, 0.3),
+    0 4px 12px rgba(0, 122, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+.terms-close-button[data-v-341fef73]:hover {
+  transform: translateY(-2px);
+  box-shadow: 
+    0 12px 32px rgba(0, 122, 255, 0.4),
+    0 6px 16px rgba(0, 122, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.terms-close-button[data-v-341fef73]:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* 自定义滚动条 */
+.terms-content[data-v-341fef73]::-webkit-scrollbar {
+  width: 6px;
+}
+.terms-content[data-v-341fef73]::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 3px;
+}
+.terms-content[data-v-341fef73]::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+  transition: background 0.3s ease;
+}
+.terms-content[data-v-341fef73]::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* 响应式设计 */
+@media (max-width: 480px) {
+.terms-content[data-v-341fef73] {
+    max-height: 50vh;
+    padding: 0 2px;
+}
+.terms-content[data-v-341fef73] h3 {
+    font-size: 16px;
+    margin: 20px 0 10px 0;
+}
+.terms-content[data-v-341fef73] p,
+  .terms-content[data-v-341fef73] li {
+    font-size: 14px;
+}
+.terms-close-button[data-v-341fef73] {
+    min-width: 140px;
+    height: 42px;
+    font-size: 15px;
+}
+}
+
+/* 全局模态框样式覆盖 */
+.terms-modal .n-card {
+  border-radius: 20px !important;
+  box-shadow: 
+    0 32px 64px rgba(0, 0, 0, 0.15),
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.05) !important;
+}
+.terms-modal .n-card__header {
+  padding: 24px 24px 16px 24px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+.terms-modal .n-card__content {
+  padding: 20px 24px !important;
+}
+.terms-modal .n-card__footer {
+  padding: 16px 24px 24px 24px !important;
+  border-top: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+.terms-modal .n-card__header .n-card__header__main {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #1d1d1f !important;
+}
+
+/* 移动端模态框优化 */
+@media (max-width: 480px) {
+.terms-modal .n-card__header {
+    padding: 20px 20px 12px 20px !important;
+}
+.terms-modal .n-card__content {
+    padding: 16px 20px !important;
+}
+.terms-modal .n-card__footer {
+    padding: 12px 20px 20px 20px !important;
+}
+.terms-modal .n-card__header .n-card__header__main {
+    font-size: 18px !important;
+}
+}
+
+/* iOS 风格注册页面样式 */
+.ios-register-container[data-v-a7a56cae] {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+
+  /* iOS 风格的渐变背景 */
+  background: linear-gradient(135deg,
+    #667eea 0%,
+    #764ba2 25%,
+    #f093fb 50%,
+    #f5576c 75%,
+    #4facfe 100%);
+  background-size: 400% 400%;
+  animation: gradientShift-a7a56cae 15s ease infinite;
+}
+
+/* 背景渐变动画 */
+@keyframes gradientShift-a7a56cae {
+0% { background-position: 0% 50%;
+}
+50% { background-position: 100% 50%;
+}
+100% { background-position: 0% 50%;
+}
+}
+
+/* 背景装饰元素 */
+.background-decoration[data-v-a7a56cae] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.decoration-circle[data-v-a7a56cae] {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  animation: float-a7a56cae 20s infinite linear;
+}
+.decoration-1[data-v-a7a56cae] {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  left: -150px;
+  animation-delay: 0s;
+}
+.decoration-2[data-v-a7a56cae] {
+  width: 200px;
+  height: 200px;
+  top: 50%;
+  right: -100px;
+  animation-delay: -7s;
+}
+.decoration-3[data-v-a7a56cae] {
+  width: 150px;
+  height: 150px;
+  bottom: -75px;
+  left: 50%;
+  animation-delay: -14s;
+}
+@keyframes float-a7a56cae {
+0% { transform: translateY(0px) rotate(0deg);
+}
+33% { transform: translateY(-20px) rotate(120deg);
+}
+66% { transform: translateY(10px) rotate(240deg);
+}
+100% { transform: translateY(0px) rotate(360deg);
+}
+}
+
+/* 注册卡片 */
+.register-card[data-v-a7a56cae] {
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 32px 64px rgba(0, 0, 0, 0.15),
+    0 16px 32px rgba(0, 0, 0, 0.1),
+    0 8px 16px rgba(0, 0, 0, 0.05),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  overflow: hidden;
+  position: relative;
+  animation: cardSlideIn-a7a56cae 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+@keyframes cardSlideIn-a7a56cae {
+from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+}
+to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+}
+.card-content[data-v-a7a56cae] {
+  position: relative;
+  z-index: 2;
+  padding: 48px 40px;
+}
+
+/* 品牌头部 */
+.brand-header[data-v-a7a56cae] {
+  text-align: center;
+  margin-bottom: 40px;
+  transition: all 0.3s ease;
+}
+
+/* 当只显示文字LOGO时的样式调整 */
+.brand-header:not(:has(.logo-wrapper)) .app-title[data-v-a7a56cae] {
+  margin-top: 0;
+  font-size: calc(var(--fa19b5b2) + 4px);
+}
+
+/* 当只显示图片LOGO时的样式调整 */
+.brand-header:not(:has(.app-title)) .logo-wrapper[data-v-a7a56cae] {
+  margin-bottom: 0;
+}
+.logo-wrapper[data-v-a7a56cae] {
+  margin-bottom: 24px;
+}
+.logo-circle[data-v-a7a56cae] {
+  width: calc(var(--8112e0fc) + 16px);
+  height: calc(var(--7a27edab) + 16px);
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: calc(var(--48636f66) + 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.5);
+  transition: all 0.3s ease;
+}
+.logo-icon[data-v-a7a56cae] {
+  width: var(--8112e0fc);
+  height: var(--7a27edab);
+  object-fit: contain;
+  border-radius: var(--48636f66);
+  transition: all 0.3s ease;
+}
+.app-title[data-v-a7a56cae] {
+  font-size: var(--fa19b5b2);
+  font-weight: var(--b7321006);
+  color: var(--5dabdd4d);
+  margin: var(--38823848) 0 8px;
+  letter-spacing: -0.5px;
+  transition: all 0.3s ease;
+
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.register-subtitle[data-v-a7a56cae] {
+  font-size: var(--1f0f053d);
+  font-weight: var(--1498e227);
+  color: #1d1d1f;
+  margin: 0;
+  opacity: 0.8;
+  letter-spacing: 0.5px;
+
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  /* 微妙的文字阴影 */
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+
+  /* 精美的渐变文字效果 */
+  background: linear-gradient(135deg,
+    #1d1d1f 0%,
+    #4a5568 25%,
+    #667eea 50%,
+    #4a5568 75%,
+    #1d1d1f 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  position: relative;
+}
+
+/* 条件性流光动画效果 */
+.register-subtitle[data-shimmer="true"][data-v-a7a56cae] {
+  animation: shimmer-a7a56cae 3s ease-in-out infinite;
+}
+
+/* 流光动画 */
+@keyframes shimmer-a7a56cae {
+0% {
+    background-position: -200% 0;
+}
+50% {
+    background-position: 200% 0;
+}
+100% {
+    background-position: -200% 0;
+}
+}
+
+/* 添加微妙的光晕效果 */
+.register-subtitle[data-v-a7a56cae]::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 120%;
+  height: 120%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.1) 0%, transparent 70%);
+  border-radius: 50%;
+  z-index: -1;
+  animation: glow-a7a56cae 4s ease-in-out infinite alternate;
+}
+@keyframes glow-a7a56cae {
+0% {
+    opacity: 0.3;
+    transform: translate(-50%, -50%) scale(0.8);
+}
+100% {
+    opacity: 0.6;
+    transform: translate(-50%, -50%) scale(1.2);
+}
+}
+
+/* 表单样式 */
+.form-wrapper[data-v-a7a56cae] {
+  width: 100%;
+}
+.ios-form[data-v-a7a56cae] {
+  width: 100%;
+}
+
+/* 输入框组 */
+.input-group[data-v-a7a56cae] {
+  margin-bottom: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+}
+
+/* 输入框组的微妙动画 */
+.input-group[data-v-a7a56cae]:nth-child(1) {
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.1s both;
+}
+.input-group[data-v-a7a56cae]:nth-child(2) {
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.2s both;
+}
+.input-group[data-v-a7a56cae]:nth-child(3) {
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.3s both;
+}
+.input-group[data-v-a7a56cae]:nth-child(4) {
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.4s both;
+}
+@keyframes slideInUp-a7a56cae {
+from {
+    opacity: 0;
+    transform: translateY(20px);
+}
+to {
+    opacity: 1;
+    transform: translateY(0);
+}
+}
+
+/* 精美的悬停效果 */
+.input-group:hover .ios-input-wrapper[data-v-a7a56cae] {
+  border-color: rgba(0, 122, 255, 0.4);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.97) 0%,
+    rgba(255, 255, 255, 0.93) 50%,
+    rgba(245, 250, 255, 0.97) 100%);
+
+  box-shadow:
+    0 8px 32px rgba(0, 122, 255, 0.06),
+    0 4px 16px rgba(0, 122, 255, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 122, 255, 0.05);
+
+  transform: translateY(-1px);
+}
+
+/* 精美的 iOS 风格输入框容器 */
+.ios-input-wrapper[data-v-a7a56cae] {
+  position: relative;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.95) 0%,
+    rgba(255, 255, 255, 0.9) 50%,
+    rgba(248, 250, 252, 0.95) 100%);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  height: 58px;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+
+  /* 精美的阴影系统 */
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.08),
+    0 4px 16px rgba(0, 0, 0, 0.04),
+    0 2px 8px rgba(0, 0, 0, 0.02),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.05);
+
+  /* 微妙的内部光泽 */
+  overflow: hidden;
+}
+
+/* 内部光泽效果 */
+.ios-input-wrapper[data-v-a7a56cae]::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.1) 100%);
+  border-radius: 18px 18px 0 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* 聚焦状态 */
+.ios-input-wrapper[data-v-a7a56cae]:focus-within {
+  border-color: rgba(0, 122, 255, 0.6);
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.98) 0%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(240, 248, 255, 0.98) 100%);
+
+  box-shadow:
+    0 0 0 4px rgba(0, 122, 255, 0.15),
+    0 12px 40px rgba(0, 122, 255, 0.12),
+    0 8px 24px rgba(0, 122, 255, 0.08),
+    0 4px 12px rgba(0, 122, 255, 0.04),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 122, 255, 0.1);
+
+  transform: translateY(-2px) scale(1.01);
+}
+
+/* 精美的输入框图标 */
+.input-icon[data-v-a7a56cae] {
+  color: #6e6e73;
+  margin-right: 16px;
+  font-size: 20px;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  z-index: 2;
+
+  /* 图标背景光晕 */
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+/* 聚焦时的图标效果 */
+.ios-input-wrapper:focus-within .input-icon[data-v-a7a56cae] {
+  color: #007AFF;
+  background: rgba(0, 122, 255, 0.1);
+  transform: scale(1.1) rotate(5deg);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.2);
+}
+
+/* 悬停时的图标效果 */
+.ios-input-wrapper:hover .input-icon[data-v-a7a56cae] {
+  color: #5a5a5f;
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+/* 精美的 iOS 风格输入框 */
+.ios-input[data-v-a7a56cae] {
+  flex: 1;
+  background: transparent !important;
+  font-size: 17px;
+  color: #1d1d1f;
+  font-weight: 500;
+  line-height: 1.3;
+  position: relative;
+  z-index: 2;
+}
+.ios-input[data-v-a7a56cae] input {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 17px;
+  color: #1d1d1f;
+  font-weight: 500;
+  padding: 0;
+  line-height: 1.3;
+  height: auto;
+  width: 100%;
+
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.01em;
+}
+.ios-input[data-v-a7a56cae] input::placeholder {
+  color: #8e8e93;
+  font-weight: 400;
+  opacity: 0.8;
+  transition: opacity 0.3s ease;
+}
+.ios-input-wrapper:focus-within .ios-input[data-v-a7a56cae] input::placeholder {
+  opacity: 0.6;
+  transform: translateX(2px);
+}
+
+/* 精美的密码显示/隐藏按钮 */
+.ios-input[data-v-a7a56cae] .n-input__eye {
+  color: #8e8e93;
+  transition: all 0.3s ease;
+  padding: 4px;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+.ios-input[data-v-a7a56cae] .n-input__eye:hover {
+  color: #007AFF;
+  background: rgba(0, 122, 255, 0.1);
+  transform: scale(1.1);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+}
+
+/* 输入框聚焦时的文字效果 */
+.ios-input-wrapper:focus-within .ios-input[data-v-a7a56cae] input {
+  color: #1d1d1f;
+  font-weight: 600;
+}
+
+/* 选中文字的样式 */
+.ios-input[data-v-a7a56cae] input::selection {
+  background-color: rgba(0, 122, 255, 0.2);
+  color: #1d1d1f;
+}
+
+/* 统一容器邮箱输入框 */
+.unified-email-field[data-v-a7a56cae] {
+  width: 100%;
+  position: relative;
+}
+.unified-container[data-v-a7a56cae] {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
+  padding: 0;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+.unified-container[data-v-a7a56cae]:hover {
+  border-color: rgba(0, 122, 255, 0.3);
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.1);
+}
+.unified-container[data-v-a7a56cae]:focus-within {
+  border-color: rgba(0, 122, 255, 0.6);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.2);
+}
+.email-icon[data-v-a7a56cae] {
+  padding: 16px 0 16px 20px;
+  color: #8e8e93;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  transition: color 0.3s ease;
+}
+.unified-container:focus-within .email-icon[data-v-a7a56cae] {
+  color: #007AFF;
+}
+.prefix-input[data-v-a7a56cae] {
+  flex: 1;
+  background: transparent !important;
+  border: 1px solid rgba(0, 0, 0, 0.1) !important;
+  border-radius: 12px !important;
+  min-width: 0;
+  padding: 12px !important;
+  margin: 8px 0 8px 12px;
+}
+.prefix-input[data-v-a7a56cae] .n-input__input-el {
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  font-size: 17px;
+  color: #1d1d1f;
+  font-weight: 500;
+  padding: 0 !important;
+  height: auto !important;
+  line-height: 1.3;
+  -webkit-font-smoothing: antialiased;
+  width: 100%;
+}
+.prefix-input[data-v-a7a56cae]:hover {
+  border-color: rgba(0, 122, 255, 0.3) !important;
+}
+.prefix-input[data-v-a7a56cae]:focus-within {
+  border-color: rgba(0, 122, 255, 0.6) !important;
+}
+.prefix-input[data-v-a7a56cae] input::placeholder {
+  color: #8e8e93;
+  font-weight: 400;
+  opacity: 0.8;
+}
+.at-symbol[data-v-a7a56cae] {
+  color: #8e8e93;
+  font-size: 17px;
+  font-weight: 500;
+  margin: 0 4px;
+  flex-shrink: 0;
+  user-select: none;
+}
+.domain-selector[data-v-a7a56cae] {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 16px 16px 16px 0;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  min-width: 80px;
+  max-width: 120px;
+}
+.domain-selector[data-v-a7a56cae]:hover {
+  transform: translateX(-2px);
+}
+.domain-text[data-v-a7a56cae] {
+  font-size: 15px;
+  font-weight: 500;
+  color: #007AFF;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  min-width: 0;
+}
+.chevron-icon[data-v-a7a56cae] {
+  color: #007AFF;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+}
+.domain-selector:hover .chevron-icon[data-v-a7a56cae] {
+  transform: translateY(1px);
+}
+
+/* 模态框样式 */
+.domain-modal-overlay[data-v-a7a56cae] {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(10px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: overlayFadeIn-a7a56cae 0.3s ease;
+}
+@keyframes overlayFadeIn-a7a56cae {
+from { opacity: 0;
+}
+to { opacity: 1;
+}
+}
+.domain-modal[data-v-a7a56cae] {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.2),
+    0 8px 24px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  width: 90%;
+  max-width: 320px;
+  max-height: 400px;
+  animation: modalSlideIn-a7a56cae 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+@keyframes modalSlideIn-a7a56cae {
+from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
+}
+to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+}
+.modal-header[data-v-a7a56cae] {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+.modal-header h3[data-v-a7a56cae] {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin: 0;
+}
+.modal-close[data-v-a7a56cae] {
+  background: none;
+  border: none;
+  color: #8e8e93;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.modal-close[data-v-a7a56cae]:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1d1d1f;
+}
+.modal-content[data-v-a7a56cae] {
+  padding: 8px 0 20px;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.domain-choice[data-v-a7a56cae] {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.domain-choice[data-v-a7a56cae]:hover {
+  background: rgba(0, 122, 255, 0.08);
+}
+.domain-choice.selected[data-v-a7a56cae] {
+  background: rgba(0, 122, 255, 0.12);
+}
+.choice-icon[data-v-a7a56cae] {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #007AFF;
+  flex-shrink: 0;
+}
+.choice-label[data-v-a7a56cae] {
+  font-size: 16px;
+  font-weight: 500;
+  color: #1d1d1f;
+  flex: 1;
+}
+.domain-choice.selected .choice-label[data-v-a7a56cae] {
+  color: #007AFF;
+  font-weight: 600;
+}
+
+/* 移动端优化 */
+@media (max-width: 480px) {
+.email-icon[data-v-a7a56cae] {
+    padding: 14px 0 14px 16px;
+    font-size: 16px;
+}
+.prefix-input[data-v-a7a56cae] {
+    padding: 10px !important;
+    margin: 6px 0 6px 10px;
+}
+.prefix-input[data-v-a7a56cae] input {
+    font-size: 16px; /* 防止iOS缩放 */
+}
+.at-symbol[data-v-a7a56cae] {
+    font-size: 16px;
+    margin: 0 3px;
+}
+.domain-selector[data-v-a7a56cae] {
+    padding: 14px 12px 14px 0;
+    min-width: 60px;
+    max-width: 100px;
+}
+.domain-text[data-v-a7a56cae] {
+    font-size: 14px;
+}
+.domain-modal[data-v-a7a56cae] {
+    width: 95%;
+    max-width: 280px;
+}
+.modal-header[data-v-a7a56cae] {
+    padding: 16px 20px 12px;
+}
+.modal-header h3[data-v-a7a56cae] {
+    font-size: 16px;
+}
+.domain-choice[data-v-a7a56cae] {
+    padding: 10px 20px;
+}
+.choice-label[data-v-a7a56cae] {
+    font-size: 15px;
+}
+}
+
+/* 服务条款同意区域 */
+.terms-agreement[data-v-a7a56cae] {
+  text-align: center;
+  margin: 16px 0 8px 0;
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.5s both;
+}
+.agreement-text[data-v-a7a56cae] {
+  font-size: 14px;
+  color: #8e8e93;
+  font-weight: 400;
+  margin-right: 4px;
+
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.terms-link[data-v-a7a56cae] {
+  background: none;
+  border: none;
+  padding: 0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  position: relative;
+
+  /* iOS 风格的文字渲染 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+.terms-link[data-v-a7a56cae]:hover {
+  opacity: 0.7;
+  transform: scale(1.02);
+}
+.terms-link[data-v-a7a56cae]:active {
+  transform: scale(0.98);
+}
+
+/* 微妙的下划线效果 */
+.terms-link[data-v-a7a56cae]::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.3;
+  transition: opacity 0.3s ease;
+}
+.terms-link[data-v-a7a56cae]:hover::after {
+  opacity: 0.6;
+}
+
+/* iOS 风格注册按钮 */
+.ios-register-button[data-v-a7a56cae] {
+  height: 56px;
+  border-radius: 16px;
+  font-size: 17px;
+  font-weight: 600;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  border: none;
+  box-shadow:
+    0 8px 24px rgba(0, 122, 255, 0.3),
+    0 4px 12px rgba(0, 122, 255, 0.2),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+}
+.ios-register-button[data-v-a7a56cae]:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 12px 32px rgba(0, 122, 255, 0.4),
+    0 6px 16px rgba(0, 122, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+.ios-register-button[data-v-a7a56cae]:active {
+  transform: translateY(0) scale(0.98);
+  transition: all 0.1s ease;
+}
+
+/* 登录链接 */
+.login-link[data-v-a7a56cae] {
+  text-align: center;
+  margin-top: 32px;
+  animation: slideInUp-a7a56cae 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) 0.6s both;
+}
+.login-text[data-v-a7a56cae] {
+  color: #1d1d1f;
+  font-size: 15px;
+  font-weight: 500;
+  opacity: 0.8;
+}
+.login-button[data-v-a7a56cae] {
+  font-size: 15px;
+  font-weight: 600;
+  margin-left: 8px;
+  color: #007AFF;
+  transition: all 0.3s ease;
+}
+.login-button[data-v-a7a56cae]:hover {
+  color: #0056CC;
+  transform: scale(1.05);
+}
+
+/* 响应式设计优化 */
+@media (max-width: 480px) {
+.ios-register-container[data-v-a7a56cae] {
+    padding: 16px;
+}
+.card-content[data-v-a7a56cae] {
+    padding: 32px 24px;
+}
+.register-card[data-v-a7a56cae] {
+    max-width: 100%;
+    border-radius: 24px;
+}
+.app-title[data-v-a7a56cae] {
+    font-size: calc(var(--fa19b5b2) - 4px);
+}
+.register-subtitle[data-v-a7a56cae] {
+    font-size: calc(var(--1f0f053d) - 2px);
+    letter-spacing: 0.3px;
+}
+.register-subtitle[data-v-a7a56cae]::before {
+    width: 100%;
+    height: 100%;
+}
+
+  /* 移动端输入框优化 */
+.ios-input-wrapper[data-v-a7a56cae] {
+    height: 54px;
+    padding: 0 18px;
+    border-radius: 16px;
+}
+.ios-input-wrapper[data-v-a7a56cae]::before {
+    border-radius: 16px 16px 0 0;
+}
+.input-icon[data-v-a7a56cae] {
+    width: 22px;
+    height: 22px;
+    font-size: 18px;
+    margin-right: 14px;
+}
+.ios-input[data-v-a7a56cae] input {
+    font-size: 16px; /* 防止 iOS 缩放 */
+}
+.ios-input[data-v-a7a56cae] input::placeholder {
+    font-size: 16px;
+}
+.ios-register-button[data-v-a7a56cae] {
+    height: 54px;
+}
+
+  /* 移动端服务条款样式 */
+.terms-agreement[data-v-a7a56cae] {
+    margin: 14px 0 6px 0;
+}
+.agreement-text[data-v-a7a56cae],
+  .terms-link[data-v-a7a56cae] {
+    font-size: 13px;
+}
+
+  /* 移动端动画优化 */
+.input-group[data-v-a7a56cae] {
+    margin-bottom: 18px;
+}
+
+  /* 减少移动端的变换效果 */
+.ios-input-wrapper[data-v-a7a56cae]:focus-within {
+    transform: translateY(-1px) scale(1.005);
+}
+.input-group:hover .ios-input-wrapper[data-v-a7a56cae] {
+    transform: none;
+}
+}
+
+/* 超小屏幕优化 */
+@media (max-width: 360px) {
+.ios-input-wrapper[data-v-a7a56cae] {
+    height: 52px;
+    padding: 0 16px;
+}
+.input-icon[data-v-a7a56cae] {
+    width: 20px;
+    height: 20px;
+    font-size: 16px;
+    margin-right: 12px;
+}
+}
+
+/* 邮箱验证码输入框样式 */
+.email-verify-wrapper[data-v-a7a56cae] {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+}
+.email-code-input[data-v-a7a56cae] {
+  flex: 1;
+}
+.send-code-button[data-v-a7a56cae] {
+  flex-shrink: 0;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 120px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 15px rgba(0, 122, 255, 0.3);
+}
+.send-code-button[data-v-a7a56cae]:hover:not(:disabled) {
+  background: linear-gradient(135deg, #0056CC 0%, #003D99 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 122, 255, 0.4);
+}
+.send-code-button[data-v-a7a56cae]:active:not(:disabled) {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 122, 255, 0.3);
+}
+.send-code-button[data-v-a7a56cae]:disabled {
+  background: rgba(142, 142, 147, 0.3);
+  color: rgba(142, 142, 147, 0.8);
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 移动端邮箱验证码样式优化 */
+@media (max-width: 480px) {
+.email-verify-wrapper[data-v-a7a56cae] {
+    gap: 8px;
+}
+.send-code-button[data-v-a7a56cae] {
+    padding: 14px 16px;
+    font-size: 14px;
+    min-width: 100px;
+    height: 54px;
+}
+}
+
+
