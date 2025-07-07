@@ -11,13 +11,13 @@ NC='\033[0m'
 echo
 # 1. 自动查找项目目录函数
 find_project() {
-    echo -e "${YELLOW}🔍 智能搜索V2Board项目...${NC}"
+    echo -e "${YELLOW}🔍 智能搜索V2Board项目...${NC}" >&2
 
     SEARCH_PATHS=("/www/wwwroot" "/var/www" "/home" "/root" "/opt" "/data/wwwroot")
 
     for path in "${SEARCH_PATHS[@]}"; do
         if [ -d "$path" ]; then
-            echo -e "${CYAN}📂 搜索路径: $path${NC}"
+            echo -e "${CYAN}📂 搜索路径: $path${NC}" >&2
 
             # 搜索所有package.json文件
             while IFS= read -r package_file; do
@@ -26,19 +26,19 @@ find_project() {
 
                     # 检查package.json内容
                     if grep -q "v2board\|frontend" "$package_file" 2>/dev/null; then
-                        echo -e "  📄 发现候选: $package_file"
+                        echo -e "  📄 发现候选: $package_file" >&2
 
                         # 验证是否有API服务器文件
                         if [ -f "$dir/server/api-server.js" ] || [ -f "$dir/dist/server/api-server.js" ]; then
-                            echo -e "${GREEN}✅ 确认项目: $dir${NC}"
-                            echo "$dir"
+                            echo -e "${GREEN}✅ 确认项目: $dir${NC}" >&2
+                            echo "$dir"  # 只输出路径到stdout
                             return 0
                         fi
 
                         # 检查是否有构建脚本和API相关配置
                         if grep -q "api-server\|build.*extreme\|express" "$package_file" 2>/dev/null; then
-                            echo -e "${GREEN}✅ 确认项目: $dir${NC}"
-                            echo "$dir"
+                            echo -e "${GREEN}✅ 确认项目: $dir${NC}" >&2
+                            echo "$dir"  # 只输出路径到stdout
                             return 0
                         fi
                     fi
@@ -48,11 +48,11 @@ find_project() {
     done
 
     # 如果常见路径没找到，显示所有可能的项目让用户确认
-    echo -e "${YELLOW}🔍 显示所有可能的项目:${NC}"
+    echo -e "${YELLOW}🔍 显示所有可能的项目:${NC}" >&2
     for path in "${SEARCH_PATHS[@]}"; do
         if [ -d "$path" ]; then
             find "$path" -maxdepth 3 -name "package.json" 2>/dev/null | head -5 | while read -r pf; do
-                echo -e "  📄 $pf"
+                echo -e "  📄 $pf" >&2
             done
         fi
     done
