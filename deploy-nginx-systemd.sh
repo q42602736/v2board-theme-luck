@@ -127,48 +127,28 @@ fi
 echo
 echo -e "${GREEN}🎯 项目目录: $PROJECT_DIR${NC}"
 
-# 2. 确保项目已构建
+# 2. 验证项目结构
 cd "$PROJECT_DIR" || exit 1
 
+echo -e "${BLUE}� 验证项目结构...${NC}"
+
 if [ ! -d "dist" ]; then
-    echo -e "${YELLOW}📦 项目未构建，正在构建...${NC}"
-    
-    # 检查npm是否可用
-    if ! command -v npm >/dev/null 2>&1; then
-        echo -e "${RED}❌ npm未安装，请先安装Node.js和npm${NC}"
-        exit 1
-    fi
-    
-    # 尝试构建
-    if grep -q "build:extreme" package.json 2>/dev/null; then
-        npm run build:extreme
-    elif grep -q "build" package.json 2>/dev/null; then
-        npm run build
-    else
-        echo -e "${RED}❌ 未找到构建脚本${NC}"
-        exit 1
-    fi
-    
-    if [ $? -ne 0 ]; then
-        echo -e "${RED}❌ 项目构建失败${NC}"
-        exit 1
-    fi
+    echo -e "${RED}❌ 未找到dist目录${NC}"
+    echo -e "${YELLOW}请确保已构建项目并上传完整的dist目录${NC}"
+    exit 1
 fi
 
 DIST_DIR="$PROJECT_DIR/dist"
-
-if [ ! -d "$DIST_DIR" ]; then
-    echo -e "${RED}❌ dist目录不存在${NC}"
-    exit 1
-fi
-
 echo -e "${GREEN}📁 部署目录: $DIST_DIR${NC}"
 
-# 3. 检查API服务器文件
+# 3. 验证关键文件
 if [ ! -f "$DIST_DIR/server/api-server.js" ]; then
     echo -e "${RED}❌ API服务器文件不存在: $DIST_DIR/server/api-server.js${NC}"
+    echo -e "${YELLOW}请确保项目已正确构建并包含server目录${NC}"
     exit 1
 fi
+
+echo -e "${GREEN}✅ 项目结构验证通过${NC}"
 
 # 4. 创建systemd服务
 echo -e "${BLUE}⚙️ 创建systemd服务...${NC}"
