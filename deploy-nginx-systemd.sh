@@ -9,48 +9,7 @@ CYAN='\033[0;36m'
 NC='\033[0m'
 
 echo
-echo -e "${BLUE}========================================${NC}"
-echo -e "${BLUE}   V2Board NGINX + Systemd 部署器${NC}"
-echo -e "${BLUE}========================================${NC}"
-echo
-
-# 检查是否为root用户
-if [ "$EUID" -ne 0 ]; then
-    echo -e "${RED}❌ 请使用root权限运行此脚本${NC}"
-    echo "使用方法: sudo $0 [项目路径]"
-    exit 1
-fi
-
-# 检查是否手动指定了项目路径
-if [ $# -gt 0 ]; then
-    PROJECT_DIR="$1"
-    echo -e "${BLUE}📁 使用指定路径: $PROJECT_DIR${NC}"
-
-    if [ ! -d "$PROJECT_DIR" ]; then
-        echo -e "${RED}❌ 指定的目录不存在: $PROJECT_DIR${NC}"
-        exit 1
-    fi
-
-    # 验证是否为V2Board项目
-    if [ -f "$PROJECT_DIR/package.json" ]; then
-        if ! grep -q "v2board\|frontend" "$PROJECT_DIR/package.json" 2>/dev/null; then
-            echo -e "${YELLOW}⚠️ 警告: 指定目录可能不是V2Board项目${NC}"
-            echo -e "${YELLOW}是否继续? (y/N): ${NC}"
-            read -r confirm
-            if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
-                exit 1
-            fi
-        fi
-    else
-        echo -e "${RED}❌ 指定目录中没有package.json文件${NC}"
-        exit 1
-    fi
-else
-    # 自动搜索项目
-    PROJECT_DIR=$(find_project)
-fi
-
-# 1. 自动查找项目目录
+# 1. 自动查找项目目录函数
 find_project() {
     echo -e "${YELLOW}🔍 智能搜索V2Board项目...${NC}"
 
@@ -100,6 +59,49 @@ find_project() {
 
     return 1
 }
+
+echo -e "${BLUE}========================================${NC}"
+echo -e "${BLUE}   V2Board NGINX + Systemd 部署器${NC}"
+echo -e "${BLUE}========================================${NC}"
+echo
+
+# 检查是否为root用户
+if [ "$EUID" -ne 0 ]; then
+    echo -e "${RED}❌ 请使用root权限运行此脚本${NC}"
+    echo "使用方法: sudo $0 [项目路径]"
+    exit 1
+fi
+
+# 检查是否手动指定了项目路径
+if [ $# -gt 0 ]; then
+    PROJECT_DIR="$1"
+    echo -e "${BLUE}📁 使用指定路径: $PROJECT_DIR${NC}"
+
+    if [ ! -d "$PROJECT_DIR" ]; then
+        echo -e "${RED}❌ 指定的目录不存在: $PROJECT_DIR${NC}"
+        exit 1
+    fi
+
+    # 验证是否为V2Board项目
+    if [ -f "$PROJECT_DIR/package.json" ]; then
+        if ! grep -q "v2board\|frontend" "$PROJECT_DIR/package.json" 2>/dev/null; then
+            echo -e "${YELLOW}⚠️ 警告: 指定目录可能不是V2Board项目${NC}"
+            echo -e "${YELLOW}是否继续? (y/N): ${NC}"
+            read -r confirm
+            if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+                exit 1
+            fi
+        fi
+    else
+        echo -e "${RED}❌ 指定目录中没有package.json文件${NC}"
+        exit 1
+    fi
+else
+    # 自动搜索项目
+    PROJECT_DIR=$(find_project)
+fi
+
+# 检查项目目录是否有效
 
 PROJECT_DIR=$(find_project)
 
