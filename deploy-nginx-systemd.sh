@@ -17,29 +17,68 @@ echo
 # 检查是否为root用户
 if [ "$EUID" -ne 0 ]; then
     echo -e "${RED}❌ 请使用root权限运行此脚本${NC}"
-    echo "使用方法: sudo $0"
+    echo "使用方法: sudo $0 [项目路径]"
     exit 1
+fi
+
+# 检查是否手动指定了项目路径
+if [ $# -gt 0 ]; then
+    PROJECT_DIR="$1"
+    echo -e "${BLUE}📁 使用指定路径: $PROJECT_DIR${NC}"
+
+    if [ ! -d "$PROJECT_DIR" ]; then
+        echo -e "${RED}❌ 指定的目录不存在: $PROJECT_DIR${NC}"
+        exit 1
+    fi
+
+    # 验证是否为V2Board项目
+    if [ -f "$PROJECT_DIR/package.json" ]; then
+        if ! grep -q "v2board\|frontend" "$PROJECT_DIR/package.json" 2>/dev/null; then
+            echo -e "${YELLOW}⚠️ 警告: 指定目录可能不是V2Board项目${NC}"
+            echo -e "${YELLOW}是否继续? (y/N): ${NC}"
+            read -r confirm
+            if [[ ! "$confirm" =~ ^[Yy]$ ]]; then
+                exit 1
+            fi
+        fi
+    else
+        echo -e "${RED}❌ 指定目录中没有package.json文件${NC}"
+        exit 1
+    fi
+else
+    # 自动搜索项目
+    PROJECT_DIR=$(find_project)
 fi
 
 # 1. 自动查找项目目录
 find_project() {
-    echo -e "${YELLOW}🔍 搜索V2Board项目目录...${NC}"
-    
+    echo -e "${YELLOW}🔍 智能搜索V2Board项目...${NC}"
+
     SEARCH_PATHS=("/www/wwwroot" "/var/www" "/home" "/root" "/opt" "/data/wwwroot")
-    
+
     for path in "${SEARCH_PATHS[@]}"; do
         if [ -d "$path" ]; then
-            echo -e "${CYAN}📂 搜索: $path${NC}"
-            
+            echo -e "${CYAN}📂 搜索路径: $path${NC}"
+
+            # 搜索所有package.json文件
             while IFS= read -r package_file; do
                 if [ -f "$package_file" ]; then
                     dir=$(dirname "$package_file")
-                    echo -e "  📄 检查: $package_file"
-                    
+
+                    # 检查package.json内容
                     if grep -q "v2board\|frontend" "$package_file" 2>/dev/null; then
-                        # 检查是否有API服务器文件
+                        echo -e "  📄 发现候选: $package_file"
+
+                        # 验证是否有API服务器文件
                         if [ -f "$dir/server/api-server.js" ] || [ -f "$dir/dist/server/api-server.js" ]; then
-                            echo -e "${GREEN}✅ 找到项目: $dir${NC}"
+                            echo -e "${GREEN}✅ 确认项目: $dir${NC}"
+                            echo "$dir"
+                            return 0
+                        fi
+
+                        # 检查是否有构建脚本和API相关配置
+                        if grep -q "api-server\|build.*extreme\|express" "$package_file" 2>/dev/null; then
+                            echo -e "${GREEN}✅ 确认项目: $dir${NC}"
                             echo "$dir"
                             return 0
                         fi
@@ -48,19 +87,38 @@ find_project() {
             done < <(find "$path" -maxdepth 6 -name "package.json" 2>/dev/null)
         fi
     done
-    
+
+    # 如果常见路径没找到，显示所有可能的项目让用户确认
+    echo -e "${YELLOW}🔍 显示所有可能的项目:${NC}"
+    for path in "${SEARCH_PATHS[@]}"; do
+        if [ -d "$path" ]; then
+            find "$path" -maxdepth 3 -name "package.json" 2>/dev/null | head -5 | while read -r pf; do
+                echo -e "  📄 $pf"
+            done
+        fi
+    done
+
     return 1
 }
 
 PROJECT_DIR=$(find_project)
 
 if [ -z "$PROJECT_DIR" ]; then
-    echo -e "${RED}❌ 未找到V2Board项目目录${NC}"
+    echo -e "${RED}❌ 自动搜索未找到V2Board项目${NC}"
     echo
-    echo -e "${YELLOW}请确保：${NC}"
-    echo "1. 项目已部署到服务器"
-    echo "2. package.json文件存在"
-    echo "3. 包含v2board相关内容"
+    echo -e "${YELLOW}📋 请手动指定项目路径：${NC}"
+    echo "使用方法: $0 /path/to/your/project"
+    echo
+    echo -e "${CYAN}或者检查以下常见位置：${NC}"
+    for path in "/www/wwwroot" "/var/www" "/home"; do
+        if [ -d "$path" ]; then
+            echo -e "  📂 $path 下的目录:"
+            ls -la "$path" 2>/dev/null | grep "^d" | awk '{print "    " $NF}' | head -5
+        fi
+    done
+    echo
+    echo -e "${YELLOW}如果您的项目在上述目录中，请运行：${NC}"
+    echo "  $0 /www/wwwroot/your-project-name"
     exit 1
 fi
 
@@ -113,63 +171,72 @@ fi
 # 4. 创建systemd服务
 echo -e "${BLUE}⚙️ 创建systemd服务...${NC}"
 
-cat > /etc/systemd/system/v2board-api.service << EOF
+# 转义路径中的特殊字符
+ESCAPED_DIST_DIR=$(printf '%s\n' "$DIST_DIR" | sed 's/[[\.*^$()+?{|]/\\&/g')
+
+cat > /etc/systemd/system/v2board-api.service << 'SERVICEEOF'
 [Unit]
 Description=V2Board API Server
 After=network.target
-Wants=network.target
 
 [Service]
 Type=simple
 User=www-data
 Group=www-data
-WorkingDirectory=$DIST_DIR
+WorkingDirectory=WORKING_DIR_PLACEHOLDER
 ExecStart=/usr/bin/node server/api-server.js
 Restart=always
 RestartSec=10
 Environment=NODE_ENV=production
 Environment=PORT=3001
 
-# 日志配置
 StandardOutput=journal
 StandardError=journal
 SyslogIdentifier=v2board-api
 
-# 安全配置
-NoNewPrivileges=true
-PrivateTmp=true
-ProtectSystem=strict
-ProtectHome=true
-ReadWritePaths=$DIST_DIR
-
 [Install]
 WantedBy=multi-user.target
-EOF
+SERVICEEOF
+
+# 替换占位符为实际路径
+sed -i "s|WORKING_DIR_PLACEHOLDER|$DIST_DIR|g" /etc/systemd/system/v2board-api.service
 
 echo -e "${GREEN}✅ systemd服务文件已创建${NC}"
 
 # 5. 设置权限
 echo -e "${BLUE}🔐 设置目录权限...${NC}"
 
-# 确保www-data用户存在
+# 确保www-data用户存在，如果不存在则使用root
 if ! id "www-data" &>/dev/null; then
-    echo -e "${YELLOW}⚠️ www-data用户不存在，创建用户...${NC}"
-    useradd -r -s /bin/false www-data
+    echo -e "${YELLOW}⚠️ www-data用户不存在，使用root用户运行服务...${NC}"
+    # 修改服务文件使用root用户
+    sed -i 's/User=www-data/User=root/g' /etc/systemd/system/v2board-api.service
+    sed -i 's/Group=www-data/Group=root/g' /etc/systemd/system/v2board-api.service
+    SERVICE_USER="root"
+else
+    SERVICE_USER="www-data"
+    chown -R www-data:www-data "$DIST_DIR"
 fi
 
-chown -R www-data:www-data "$DIST_DIR"
 chmod -R 755 "$DIST_DIR"
 
-echo -e "${GREEN}✅ 权限设置完成${NC}"
+echo -e "${GREEN}✅ 权限设置完成 (运行用户: $SERVICE_USER)${NC}"
 
 # 6. 安装生产依赖
 echo -e "${BLUE}📦 安装生产环境依赖...${NC}"
 cd "$DIST_DIR"
 
 if [ -f "package.json" ]; then
-    sudo -u www-data npm install --production
+    if [ "$SERVICE_USER" = "www-data" ]; then
+        sudo -u www-data npm install --production
+    else
+        npm install --production
+    fi
+
     if [ $? -ne 0 ]; then
         echo -e "${YELLOW}⚠️ 依赖安装失败，但继续部署...${NC}"
+    else
+        echo -e "${GREEN}✅ 依赖安装完成${NC}"
     fi
 else
     echo -e "${YELLOW}⚠️ dist目录中没有package.json，跳过依赖安装${NC}"
