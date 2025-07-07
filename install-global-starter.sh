@@ -63,36 +63,46 @@ find_project_dir() {
     # 在常见路径中搜索
     for base_path in "${SEARCH_PATHS[@]}"; do
         if [ -d "$base_path" ]; then
-            echo -e "${CYAN}  🔎 搜索: $base_path${NC}"
-            # 查找v2board-frontend目录
-            found_dirs=$(find "$base_path" -maxdepth 4 -type d -name "*v2board*frontend*" 2>/dev/null)
-            
-            for dir in $found_dirs; do
-                if [ -f "$dir/package.json" ] && [ -f "$dir/server/api-server.js" ]; then
-                    # 验证是否为正确的项目
-                    if grep -q "v2board-frontend" "$dir/package.json" 2>/dev/null; then
-                        echo -e "${GREEN}✅ 找到项目: $dir${NC}"
-                        echo "$dir"
-                        return 0
+            echo -e "${CYAN}  🔎 深度搜索: $base_path${NC}"
+
+            # 搜索所有package.json文件，不限制目录名
+            while IFS= read -r package_file; do
+                if [ -f "$package_file" ]; then
+                    dir=$(dirname "$package_file")
+                    echo -e "    📄 检查: $package_file"
+
+                    # 检查package.json内容是否包含v2board相关信息
+                    if grep -q "v2board\|frontend" "$package_file" 2>/dev/null; then
+                        # 进一步验证是否为正确的项目
+                        if [ -f "$dir/server/api-server.js" ] || grep -q "api-server" "$package_file" 2>/dev/null; then
+                            echo -e "${GREEN}✅ 找到项目: $dir${NC}"
+                            echo "$dir"
+                            return 0
+                        fi
                     fi
                 fi
-            done
+            done < <(find "$base_path" -maxdepth 6 -name "package.json" 2>/dev/null)
         fi
     done
     
     # 如果没找到，进行更广泛的搜索
     echo -e "${YELLOW}  🔍 扩大搜索范围...${NC}"
-    found_dirs=$(find / -maxdepth 5 -type d -name "*v2board*frontend*" 2>/dev/null | head -10)
-    
-    for dir in $found_dirs; do
-        if [ -f "$dir/package.json" ] && [ -f "$dir/server/api-server.js" ]; then
-            if grep -q "v2board-frontend" "$dir/package.json" 2>/dev/null; then
-                echo -e "${GREEN}✅ 找到项目: $dir${NC}"
-                echo "$dir"
-                return 0
+
+    # 全局搜索所有package.json文件
+    while IFS= read -r package_file; do
+        if [ -f "$package_file" ]; then
+            dir=$(dirname "$package_file")
+            echo -e "    📄 全局检查: $package_file"
+
+            if grep -q "v2board\|frontend" "$package_file" 2>/dev/null; then
+                if [ -f "$dir/server/api-server.js" ] || grep -q "api-server" "$package_file" 2>/dev/null; then
+                    echo -e "${GREEN}✅ 找到项目: $dir${NC}"
+                    echo "$dir"
+                    return 0
+                fi
             fi
         fi
-    done
+    done < <(find / -maxdepth 7 -name "package.json" 2>/dev/null | head -20)
     
     return 1
 }
