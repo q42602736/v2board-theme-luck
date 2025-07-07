@@ -132,29 +132,28 @@ cd "$PROJECT_DIR" || exit 1
 
 echo -e "${BLUE}� 验证项目结构...${NC}"
 
-if [ ! -d "dist" ]; then
-    echo -e "${RED}❌ 未找到dist目录${NC}"
-    echo -e "${YELLOW}请确保已构建项目并上传完整的dist目录${NC}"
+# 检查是否是构建后的项目（直接包含server目录）
+if [ -f "server/api-server.js" ]; then
+    DEPLOY_DIR="$PROJECT_DIR"
+    echo -e "${GREEN}📁 部署目录: $DEPLOY_DIR${NC}"
+    echo -e "${GREEN}✅ 检测到构建后的项目结构${NC}"
+elif [ -f "dist/server/api-server.js" ]; then
+    DEPLOY_DIR="$PROJECT_DIR/dist"
+    echo -e "${GREEN}📁 部署目录: $DEPLOY_DIR${NC}"
+    echo -e "${GREEN}✅ 检测到包含dist子目录的项目结构${NC}"
+else
+    echo -e "${RED}❌ 未找到API服务器文件${NC}"
+    echo -e "${YELLOW}请确保已上传构建后的项目文件，包含server/api-server.js${NC}"
+    echo -e "${CYAN}项目目录内容:${NC}"
+    ls -la
     exit 1
 fi
-
-DIST_DIR="$PROJECT_DIR/dist"
-echo -e "${GREEN}📁 部署目录: $DIST_DIR${NC}"
-
-# 3. 验证关键文件
-if [ ! -f "$DIST_DIR/server/api-server.js" ]; then
-    echo -e "${RED}❌ API服务器文件不存在: $DIST_DIR/server/api-server.js${NC}"
-    echo -e "${YELLOW}请确保项目已正确构建并包含server目录${NC}"
-    exit 1
-fi
-
-echo -e "${GREEN}✅ 项目结构验证通过${NC}"
 
 # 4. 创建systemd服务
 echo -e "${BLUE}⚙️ 创建systemd服务...${NC}"
 
 # 转义路径中的特殊字符
-ESCAPED_DIST_DIR=$(printf '%s\n' "$DIST_DIR" | sed 's/[[\.*^$()+?{|]/\\&/g')
+ESCAPED_DEPLOY_DIR=$(printf '%s\n' "$DEPLOY_DIR" | sed 's/[[\.*^$()+?{|]/\\&/g')
 
 cat > /etc/systemd/system/v2board-api.service << 'SERVICEEOF'
 [Unit]
@@ -181,7 +180,7 @@ WantedBy=multi-user.target
 SERVICEEOF
 
 # 替换占位符为实际路径
-sed -i "s|WORKING_DIR_PLACEHOLDER|$DIST_DIR|g" /etc/systemd/system/v2board-api.service
+sed -i "s|WORKING_DIR_PLACEHOLDER|$DEPLOY_DIR|g" /etc/systemd/system/v2board-api.service
 
 echo -e "${GREEN}✅ systemd服务文件已创建${NC}"
 
@@ -197,16 +196,16 @@ if ! id "www-data" &>/dev/null; then
     SERVICE_USER="root"
 else
     SERVICE_USER="www-data"
-    chown -R www-data:www-data "$DIST_DIR"
+    chown -R www-data:www-data "$DEPLOY_DIR"
 fi
 
-chmod -R 755 "$DIST_DIR"
+chmod -R 755 "$DEPLOY_DIR"
 
 echo -e "${GREEN}✅ 权限设置完成 (运行用户: $SERVICE_USER)${NC}"
 
 # 6. 安装生产依赖
 echo -e "${BLUE}📦 安装生产环境依赖...${NC}"
-cd "$DIST_DIR"
+cd "$DEPLOY_DIR"
 
 if [ -f "package.json" ]; then
     if [ "$SERVICE_USER" = "www-data" ]; then
