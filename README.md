@@ -83,18 +83,45 @@
 
 ## ⚙️ 配置说明
 
-### 基础配置
+### API配置系统（推荐）
 
-编辑 `public/config.js` 文件：
+项目采用API配置系统，配置文件通过后端API提供，更加安全可靠：
+
+#### 配置文件位置
+编辑 `server/config.json` 文件：
+
+```json
+{
+  "API_CONFIG": {
+    "ENABLED": true,
+    "DEFAULT_API_URL": "https://your-api-domain.com",
+    "APP_TITLE": "Your App Name",
+    "FEATURES": {
+      "INVITE_ENABLED": true,
+      "TICKET_ENABLED": true,
+      "GIFTCARD_ENABLED": true,
+      "RECHARGE_ENABLED": true,
+      "TRAFFIC_DETAILS_ENABLED": true
+    }
+  }
+}
+```
+
+#### API配置优势
+- **安全性**: 配置文件不暴露在前端，无法直接访问
+- **动态性**: 支持实时更新配置，无需重新构建
+- **集中管理**: 所有配置集中在服务器端管理
+- **权限控制**: 可配置访问权限和CORS策略
+
 
 ```javascript
 window.V2BOARD_CONFIG = {
   // API 地址配置
   DEFAULT_API_URL: 'https://your-api-domain.com',
-  
+
   // 应用标题
   APP_TITLE: 'Your App Name',
-  
+
   // 功能开关
   FEATURES: {
     INVITE_ENABLED: true,           // 邀请功能
@@ -156,7 +183,7 @@ import { darkTheme } from 'naive-ui'
 
 #### 1. API配置部署（推荐）
 
-使用API配置系统可以有效保护配置文件安全：
+使用API配置系统可以有效保护配置文件安全，配置通过后端API提供：
 **1. API配置部署**
 ```bash
 # 进入项目目录
@@ -196,7 +223,16 @@ location /api/ {
     proxy_set_header X-Forwarded-Proto $scheme;
 }
 ```
-**3. 要更改配置直接更改项目server目录下的配置文件就行**
+**3. 配置管理**
+
+要更改配置，直接编辑项目 `server/config.json` 文件：
+
+```bash
+# 编辑配置文件
+nano /www/wwwroot/your-domain.com/server/config.json
+
+# 配置会实时生效，无需重启
+```
 
 #### 2. 静态部署
 
