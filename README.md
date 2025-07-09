@@ -12,7 +12,7 @@
 
 **现代化的 V2Board 主题 - Luck**
 
-一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 主题项目，支持V2BOARD、wyx2685@v2board和Xboard，提供优雅的用户体验和完整的功能支持。
+一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 主题项目，支持[V2BOARD](https://github.com/v2board/v2board)、[wyx2685@v2board](https://github.com/wyx2685/v2board)和[Xboard](https://github.com/cedar2025/Xboard)，提供优雅的用户体验和完整的功能支持。
 
 [在线演示](https://demo.example.com) · [文档](https://docs.example.com) · [问题反馈](https://github.com/your-username/v2board-theme-luck/issues) · [📢 TG频道](https://t.me/fluentboard666)
 
