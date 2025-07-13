@@ -79,59 +79,7 @@
 
 ![邀请推广](screenshots/invite.png)
 
-</div>
 
-## ⚙️ 配置说明
-
-### API配置系统（推荐）
-
-项目采用API配置系统，配置文件通过后端API提供，更加安全可靠：
-
-#### 配置文件位置
-编辑 `server/config.json` 文件：
-
-```json
-{
-  "API_CONFIG": {
-    "ENABLED": true,
-    "DEFAULT_API_URL": "https://your-api-domain.com",
-    "APP_TITLE": "Your App Name",
-    "FEATURES": {
-      "INVITE_ENABLED": true,
-      "TICKET_ENABLED": true,
-      "GIFTCARD_ENABLED": true,
-      "RECHARGE_ENABLED": true,
-      "TRAFFIC_DETAILS_ENABLED": true
-    }
-  }
-}
-```
-
-#### API配置优势
-- **安全性**: 配置文件不暴露在前端，无法直接访问
-- **动态性**: 支持实时更新配置，无需重新构建
-- **集中管理**: 所有配置集中在服务器端管理
-- **权限控制**: 可配置访问权限和CORS策略
-
-
-```javascript
-window.V2BOARD_CONFIG = {
-  // API 地址配置
-  DEFAULT_API_URL: 'https://your-api-domain.com',
-
-  // 应用标题
-  APP_TITLE: 'Your App Name',
-
-  // 功能开关
-  FEATURES: {
-    INVITE_ENABLED: true,           // 邀请功能
-    TICKET_ENABLED: true,           // 工单功能
-    GIFTCARD_ENABLED: true,         // 礼品卡功能
-    RECHARGE_ENABLED: true,         // 充值功能
-    TRAFFIC_DETAILS_ENABLED: true   // 流量明细功能
-  }
-}
-```
 
 ## 🎨 落地页主题定制
 
@@ -278,6 +226,57 @@ nano /www/wwwroot/your-domain.com/server/config.json
 3. 点击 `申请` 并等待证书颁发
 4. 开启 `强制HTTPS`
 
+</div>
+
+**步骤 5：配置系统（推荐）**
+
+项目采用API配置系统，配置文件通过后端API提供，更加安全可靠：
+
+#### 配置文件位置
+编辑 `server/config.json` 文件：
+
+```json
+{
+  "API_CONFIG": {
+    "ENABLED": true,
+    "DEFAULT_API_URL": "https://your-api-domain.com",
+    "APP_TITLE": "Your App Name",
+    "FEATURES": {
+      "INVITE_ENABLED": true,
+      "TICKET_ENABLED": true,
+      "GIFTCARD_ENABLED": true,
+      "RECHARGE_ENABLED": true,
+      "TRAFFIC_DETAILS_ENABLED": true
+    }
+  }
+}
+```
+
+#### API配置优势
+- **安全性**: 配置文件不暴露在前端，无法直接访问
+- **动态性**: 支持实时更新配置，无需重新构建
+- **集中管理**: 所有配置集中在服务器端管理
+- **权限控制**: 可配置访问权限和CORS策略
+
+
+```javascript
+window.V2BOARD_CONFIG = {
+  // API 地址配置
+  DEFAULT_API_URL: 'https://your-api-domain.com',
+
+  // 应用标题
+  APP_TITLE: 'Your App Name',
+
+  // 功能开关
+  FEATURES: {
+    INVITE_ENABLED: true,           // 邀请功能
+    TICKET_ENABLED: true,           // 工单功能
+    GIFTCARD_ENABLED: true,         // 礼品卡功能
+    RECHARGE_ENABLED: true,         // 充值功能
+    TRAFFIC_DETAILS_ENABLED: true   // 流量明细功能
+  }
+}
+```
 
 
 
