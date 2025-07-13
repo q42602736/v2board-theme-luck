@@ -81,6 +81,87 @@
 
 </div>
 
+
+
+## 🎨 落地页主题定制
+
+项目支持多种落地页主题定制方式：包括移植的sspanel的主题malio、zhujike、cool、wukong
+
+
+### 组件主题
+
+使用 Naive UI 的主题定制功能：
+
+```typescript
+import { darkTheme } from 'naive-ui'
+
+// 在组件中使用
+<n-config-provider :theme="darkTheme">
+  <App />
+</n-config-provider>
+```
+
+## 📱 移动端特性
+
+### 响应式断点
+
+- **Mobile**: < 768px
+- **Tablet**: 768px - 1024px  
+- **Desktop**: > 1024px
+
+### 移动端组件
+
+项目包含专门的移动端组件：
+
+- `MobileDashboardLayout` - 移动端布局
+- `MobileSheet` - 移动端弹出层
+- `MobileActionButtons` - 移动端操作按钮
+
+
+#### 1. 静态部署
+
+##### 宝塔面板部署（推荐）
+
+宝塔面板是最简单的部署方式，适合新手和快速部署：
+
+**步骤 1：创建站点**
+1. 登录宝塔面板
+2. 点击 `网站` → `添加站点`
+3. 填写域名（如：`your-domain.com`）
+4. 选择 `PHP版本`：纯静态（或任意版本）
+5. 点击 `提交` 创建站点
+
+**步骤 2：上传文件**
+1. 在网站列表中找到刚创建的站点
+2. 点击 `根目录` 进入文件管理
+3. 删除默认的 `index.html` 等文件
+4. 将构建后的 `dist` 目录中的所有文件上传到网站根目录
+   ```
+   网站根目录/
+   ├── index.html
+   ├── flags
+   ├── server
+   ├── assets
+   ├── theme
+   └── ...
+   ```
+
+**步骤 3：配置伪静态**
+1. 在网站设置中点击 `伪静态`
+2. 选择 `自定义` 并添加以下规则：
+   ```nginx
+   location / {
+       try_files $uri $uri/ /index.html;
+   }
+   ```
+3. 点击 `保存`
+
+**步骤 4：SSL 配置（可选但推荐）**
+1. 在网站设置中点击 `SSL`
+2. 选择 `Let's Encrypt` 免费证书
+3. 点击 `申请` 并等待证书颁发
+4. 开启 `强制HTTPS`
+
 ## ⚙️ 配置说明
 
 ### API配置系统（推荐）
@@ -132,43 +213,6 @@ window.V2BOARD_CONFIG = {
   }
 }
 ```
-
-## 🎨 落地页主题定制
-
-项目支持多种落地页主题定制方式：包括移植的sspanel的主题malio、zhujike、cool、wukong
-
-
-### 组件主题
-
-使用 Naive UI 的主题定制功能：
-
-```typescript
-import { darkTheme } from 'naive-ui'
-
-// 在组件中使用
-<n-config-provider :theme="darkTheme">
-  <App />
-</n-config-provider>
-```
-
-## 📱 移动端特性
-
-### 响应式断点
-
-- **Mobile**: < 768px
-- **Tablet**: 768px - 1024px  
-- **Desktop**: > 1024px
-
-### 移动端组件
-
-项目包含专门的移动端组件：
-
-- `MobileDashboardLayout` - 移动端布局
-- `MobileSheet` - 移动端弹出层
-- `MobileActionButtons` - 移动端操作按钮
-
-
-
 ### 🔒 API配置安全隐藏
 
 为了保护配置文件中的敏感信息（如 API 地址、密钥等），项目提供了基于API的配置隐藏功能，将配置文件从前端隐藏，通过后端API接口提供配置数据。
@@ -233,52 +277,6 @@ nano /www/wwwroot/your-domain.com/server/config.json
 
 # 配置会实时生效，无需重启
 ```
-
-#### 2. 静态部署
-
-##### 宝塔面板部署（推荐）
-
-宝塔面板是最简单的部署方式，适合新手和快速部署：
-
-**步骤 1：创建站点**
-1. 登录宝塔面板
-2. 点击 `网站` → `添加站点`
-3. 填写域名（如：`your-domain.com`）
-4. 选择 `PHP版本`：纯静态（或任意版本）
-5. 点击 `提交` 创建站点
-
-**步骤 2：上传文件**
-1. 在网站列表中找到刚创建的站点
-2. 点击 `根目录` 进入文件管理
-3. 删除默认的 `index.html` 等文件
-4. 将构建后的 `dist` 目录中的所有文件上传到网站根目录
-   ```
-   网站根目录/
-   ├── index.html
-   ├── flags
-   ├── server
-   ├── assets
-   ├── theme
-   └── ...
-   ```
-
-**步骤 3：配置伪静态**
-1. 在网站设置中点击 `伪静态`
-2. 选择 `自定义` 并添加以下规则：
-   ```nginx
-   location / {
-       try_files $uri $uri/ /index.html;
-   }
-   ```
-3. 点击 `保存`
-
-**步骤 4：SSL 配置（可选但推荐）**
-1. 在网站设置中点击 `SSL`
-2. 选择 `Let's Encrypt` 免费证书
-3. 点击 `申请` 并等待证书颁发
-4. 开启 `强制HTTPS`
-
-
 
 
 ## 🎬 流媒体解锁检测脚本
