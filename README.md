@@ -259,13 +259,16 @@ ps aux | grep api-server
 在您的NGINX配置文件中添加API代理：
 
 ```# 在现有的server { } 块内部添加这个location
-location /api/ {
+   location /api/ {
     proxy_pass http://localhost:3001;
     proxy_set_header Host $host;
     proxy_set_header X-Real-IP $remote_addr;
     proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    proxy_set_header X-Forwarded-Proto $scheme;
-}
+    }
+    location ^~ /server/ {
+    return 403;
+    }
+
 ```
 **3. 配置管理**
 
