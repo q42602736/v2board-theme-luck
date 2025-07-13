@@ -254,7 +254,7 @@ nohup ./start.sh > api.log 2>&1 &
 # 查看进程状态
 ps aux | grep api-server
 ```
-**2. 配置NGINX反向代理**
+**2. 添加站点NGINX配置**
 
 在您的NGINX配置文件中添加API代理：
 
