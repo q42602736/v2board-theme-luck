@@ -1647,6 +1647,37 @@ postData() {
     # 生成解锁标签
     generateUnlockTags
 
+    # 询问用户如何处理已有的解锁信息
+    echo ""
+    echo "=========================================="
+    echo "           解锁信息处理方式"
+    echo "=========================================="
+    echo "检测到将要上传解锁信息到节点，请选择处理方式："
+    echo "1. 覆盖模式 - 清除节点现有解锁标签，只保留新检测的解锁信息"
+    echo "2. 合并模式 - 保留节点现有解锁标签，添加新检测的解锁信息"
+    echo "3. 更新模式 - 只更新相同服务的解锁状态，保留其他解锁信息"
+    echo ""
+    read -p "请选择处理方式 (1-3): " unlock_mode
+
+    case $unlock_mode in
+        1)
+            unlock_process_mode="override"
+            green "已选择覆盖模式：将清除现有解锁标签"
+            ;;
+        2)
+            unlock_process_mode="merge"
+            green "已选择合并模式：将保留现有解锁标签并添加新的"
+            ;;
+        3)
+            unlock_process_mode="update"
+            green "已选择更新模式：将更新相同服务的解锁状态"
+            ;;
+        *)
+            red "无效的选择，默认使用更新模式"
+            unlock_process_mode="update"
+            ;;
+    esac
+
     # 上传单个节点的函数
     uploadToSingleNode() {
         local node_id=$1
@@ -1676,9 +1707,9 @@ postData() {
 
         echo "当前tags: $current_tags"
 
-        # 移除现有的解锁相关标签，保留用户自定义标签
+        # 删除现有的解锁相关标签，保留用户自定义标签（每日更新，保持最新状态）
         filtered_tags=$(echo "$current_tags" | jq '[.[] | select(. | test("(Netflix|Disney\\+|YouTube|OpenAI|Bahamut|Discovery\\+|Paramount\\+):") | not)]')
-        echo "过滤后的用户标签: $filtered_tags"
+        echo "删除旧解锁标签后的用户标签: $filtered_tags"
 
         # 添加新的解锁标签
         new_tags="$filtered_tags"
@@ -1724,6 +1755,14 @@ postData() {
     }
 
     # 处理多节点上传
+    echo ""
+    echo "=========================================="
+    echo "注意：脚本将删除节点现有的解锁标签，"
+    echo "      只保留最新检测的解锁信息，"
+    echo "      用户自定义标签不会被影响。"
+    echo "=========================================="
+    echo ""
+
     log "INFO" "开始批量上传解锁信息..."
 
     success_count=0
