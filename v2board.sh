@@ -1231,8 +1231,12 @@ checkConfig() {
         read -p "请输入管理员邮箱: " admin_email
         read -p "请输入管理员密码: " admin_password
         echo ""
+        echo "请输入V2Board管理员路径（secure_path）"
+        echo "提示：在V2Board后台URL中可以看到，例如：admin、manage、backend等"
+        read -p "管理员路径 (secure_path): " secure_path
+        echo ""
 
-        if [[ "${panel_address}" = "" ]] || [[ "${admin_email}" = "" ]] || [[ "${admin_password}" = "" ]];then
+        if [[ "${panel_address}" = "" ]] || [[ "${admin_email}" = "" ]] || [[ "${admin_password}" = "" ]] || [[ "${secure_path}" = "" ]];then
             red "请填写所有必需信息"
             exit
         fi
@@ -1264,16 +1268,6 @@ checkConfig() {
         else
             red "登录失败，请检查邮箱和密码是否正确"
             echo "错误信息: $login_response"
-            exit
-        fi
-
-        # 手动输入管理员路径
-        echo "请输入V2Board管理员路径（secure_path）"
-        echo "提示：在V2Board后台URL中可以看到，例如：admin、manage、backend等"
-        read -p "管理员路径 (secure_path): " secure_path
-
-        if [[ -z "$secure_path" ]]; then
-            red "管理员路径不能为空"
             exit
         fi
 
@@ -1647,36 +1641,7 @@ postData() {
     # 生成解锁标签
     generateUnlockTags
 
-    # 询问用户如何处理已有的解锁信息
-    echo ""
-    echo "=========================================="
-    echo "           解锁信息处理方式"
-    echo "=========================================="
-    echo "检测到将要上传解锁信息到节点，请选择处理方式："
-    echo "1. 覆盖模式 - 清除节点现有解锁标签，只保留新检测的解锁信息"
-    echo "2. 合并模式 - 保留节点现有解锁标签，添加新检测的解锁信息"
-    echo "3. 更新模式 - 只更新相同服务的解锁状态，保留其他解锁信息"
-    echo ""
-    read -p "请选择处理方式 (1-3): " unlock_mode
 
-    case $unlock_mode in
-        1)
-            unlock_process_mode="override"
-            green "已选择覆盖模式：将清除现有解锁标签"
-            ;;
-        2)
-            unlock_process_mode="merge"
-            green "已选择合并模式：将保留现有解锁标签并添加新的"
-            ;;
-        3)
-            unlock_process_mode="update"
-            green "已选择更新模式：将更新相同服务的解锁状态"
-            ;;
-        *)
-            red "无效的选择，默认使用更新模式"
-            unlock_process_mode="update"
-            ;;
-    esac
 
     # 上传单个节点的函数
     uploadToSingleNode() {
