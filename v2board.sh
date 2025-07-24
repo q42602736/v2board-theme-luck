@@ -1587,40 +1587,40 @@ postData() {
         # 解析解锁结果并生成标签（智能判断是否需要上传）
         netflix_status=$(echo "$unlock_data" | jq -r '.Netflix // "Unknown"')
         echo "Netflix状态: $netflix_status"
-        # Netflix：Yes状态或包含地区信息的都上传
-        if [[ "$netflix_status" =~ ^Yes ]] || [[ "$netflix_status" =~ Region: ]]; then
+        # Netflix：Yes状态或包含地区代码的都上传（如(HK)、(US)等）
+        if [[ "$netflix_status" =~ ^Yes ]] || [[ "$netflix_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("Netflix:$netflix_status")
             echo "添加标签: Netflix:$netflix_status"
         fi
 
         disney_status=$(echo "$unlock_data" | jq -r '.DisneyPlus // "Unknown"')
         echo "Disney+状态: $disney_status"
-        # Disney+：Yes状态或包含地区信息的都上传
-        if [[ "$disney_status" =~ ^Yes ]] || [[ "$disney_status" =~ Region: ]]; then
+        # Disney+：Yes状态或包含地区代码的都上传
+        if [[ "$disney_status" =~ ^Yes ]] || [[ "$disney_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("Disney+:$disney_status")
             echo "添加标签: Disney+:$disney_status"
         fi
 
         youtube_status=$(echo "$unlock_data" | jq -r '.YouTube // "Unknown"')
         echo "YouTube状态: $youtube_status"
-        # YouTube特殊处理：Yes状态或包含Region信息的都上传（如Region: CN表示送中）
-        if [[ "$youtube_status" =~ ^Yes ]] || [[ "$youtube_status" =~ Region: ]]; then
+        # YouTube特殊处理：Yes状态或包含地区代码的都上传（如(CN)表示送中）
+        if [[ "$youtube_status" =~ ^Yes ]] || [[ "$youtube_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("YouTube:$youtube_status")
             echo "添加标签: YouTube:$youtube_status"
         fi
 
         openai_status=$(echo "$unlock_data" | jq -r '.OpenAI // "Unknown"')
         echo "OpenAI状态: $openai_status"
-        # OpenAI：Yes状态或包含地区信息的都上传
-        if [[ "$openai_status" =~ ^Yes ]] || [[ "$openai_status" =~ Region: ]]; then
+        # OpenAI：Yes状态或包含地区代码的都上传
+        if [[ "$openai_status" =~ ^Yes ]] || [[ "$openai_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("OpenAI:$openai_status")
             echo "添加标签: OpenAI:$openai_status"
         fi
 
         bahamut_status=$(echo "$unlock_data" | jq -r '.BahamutAnime // "Unknown"')
         echo "动画疯状态: $bahamut_status"
-        # Bahamut：Yes状态或包含地区信息的都上传
-        if [[ "$bahamut_status" =~ ^Yes ]] || [[ "$bahamut_status" =~ Region: ]]; then
+        # Bahamut：Yes状态或包含地区代码的都上传
+        if [[ "$bahamut_status" =~ ^Yes ]] || [[ "$bahamut_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("Bahamut:$bahamut_status")
             echo "添加标签: Bahamut:$bahamut_status"
         fi
@@ -1628,16 +1628,16 @@ postData() {
         # 添加其他检测到的解锁服务
         discovery_status=$(echo "$unlock_data" | jq -r '.DiscoveryPlus // "Unknown"')
         echo "Discovery+状态: $discovery_status"
-        # Discovery+：Yes状态或包含地区信息的都上传
-        if [[ "$discovery_status" =~ ^Yes ]] || [[ "$discovery_status" =~ Region: ]]; then
+        # Discovery+：Yes状态或包含地区代码的都上传
+        if [[ "$discovery_status" =~ ^Yes ]] || [[ "$discovery_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("Discovery+:$discovery_status")
             echo "添加标签: Discovery+:$discovery_status"
         fi
 
         paramount_status=$(echo "$unlock_data" | jq -r '.ParamountPlus // "Unknown"')
         echo "Paramount+状态: $paramount_status"
-        # Paramount+：Yes状态或包含地区信息的都上传
-        if [[ "$paramount_status" =~ ^Yes ]] || [[ "$paramount_status" =~ Region: ]]; then
+        # Paramount+：Yes状态或包含地区代码的都上传
+        if [[ "$paramount_status" =~ ^Yes ]] || [[ "$paramount_status" =~ \([A-Z]{2}\) ]]; then
             unlock_tags+=("Paramount+:$paramount_status")
             echo "添加标签: Paramount+:$paramount_status"
         fi
