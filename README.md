@@ -16,6 +16,24 @@
 
 [在线演示](https://demo.example.com) · [文档](https://docs.example.com) · [问题反馈](https://github.com/your-username/v2board-theme-luck/issues) · [📢 TG频道](https://t.me/fluentboard666)
 
+# 面板魔改服务
+
+🔧 **提供各种老旧面板魔改服务，支持对接各种最新协议：**  
+- **VLESS + Reality**  
+- **HYSTERIA2**
+- **AnyTLS等各种协议**
+
+✨ **同时支持各种后端的魔改，满足您的需求！**  
+💰 **价格好商量，具体请联系我！**
+
+### 联系方式
+- 个人 Telegram: [@alexlilu](https://t.me/alexlilu)
+- Telegram 群: [t.me/fluentboard666](https://t.me/fluentboard666)
+
+欢迎随时联系我，期待与您合作！
+
+
+
 </div>
 
 ## ✨ 特性
