@@ -1267,38 +1267,17 @@ checkConfig() {
             exit
         fi
 
-        # 获取管理员路径（secure_path）
-        echo "正在获取管理员路径..."
-
-        # 尝试从前端获取secure_path
-        secure_path_response=$(curl -s "${panel_address}/")
-        secure_path=$(echo "$secure_path_response" | grep -o 'secure_path[^"]*' | head -1 | cut -d'"' -f3)
+        # 手动输入管理员路径
+        echo "请输入V2Board管理员路径（secure_path）"
+        echo "提示：在V2Board后台URL中可以看到，例如：admin、manage、backend等"
+        read -p "管理员路径 (secure_path): " secure_path
 
         if [[ -z "$secure_path" ]]; then
-            # 如果无法获取，尝试常见的路径
-            echo "无法自动获取secure_path，尝试常见路径..."
-            possible_paths=("admin" "manage" "backend" "control")
-
-            for path in "${possible_paths[@]}"; do
-                echo "尝试路径: $path"
-                test_url="${panel_address}/api/v1/${path}/server/manage/getNodes"
-                test_response=$(curl -s -H "Authorization: ${auth_data}" "$test_url")
-
-                if echo "$test_response" | grep -q '"data"'; then
-                    secure_path="$path"
-                    green "找到有效路径: $path"
-                    break
-                fi
-            done
-
-            if [[ -z "$secure_path" ]]; then
-                red "无法找到有效的管理员API路径"
-                echo "请手动输入secure_path（在V2Board后台URL中可以看到）："
-                read -p "secure_path: " secure_path
-            fi
-        else
-            green "自动获取到secure_path: $secure_path"
+            red "管理员路径不能为空"
+            exit
         fi
+
+        green "使用管理员路径: $secure_path"
 
         # 测试API连接
         echo "正在测试API权限..."
@@ -1333,80 +1312,223 @@ checkConfig() {
             fi
         fi
 
-        # 显示可用的节点类型
+        # 显示所有可用节点（按协议分组）
         echo ""
-        echo "可用的节点类型:"
-        echo "1. vmess"
-        echo "2. vless"
-        echo "3. trojan"
-        echo "4. shadowsocks"
-        echo "5. hysteria"
-        echo "6. tuic"
-        echo "7. anytls"
-        echo ""
-        read -p "请选择节点类型 (输入数字 1-7): " type_choice
+        echo "正在获取所有可用节点..."
 
-        # 根据数字选择转换为节点类型
-        case $type_choice in
-            1) server_type="vmess" ;;
-            2) server_type="vless" ;;
-            3) server_type="trojan" ;;
-            4) server_type="shadowsocks" ;;
-            5) server_type="hysteria" ;;
-            6) server_type="tuic" ;;
-            7) server_type="anytls" ;;
+        # 根据认证方式获取节点列表
+        if [[ "$auth_method" == "param" ]]; then
+            all_nodes_response="$test_response2"
+        else
+            all_nodes_response="$test_response"
+        fi
+
+        # 按协议分组显示节点
+        echo ""
+        echo "=========================================="
+        echo "           可用节点列表（按协议分组）"
+        echo "=========================================="
+
+        protocols=("vmess" "vless" "trojan" "shadowsocks" "hysteria" "tuic" "anytls")
+
+        for protocol in "${protocols[@]}"; do
+            nodes=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${protocol}\") | \"ID: \(.id) - \(.name)\"")
+            if [[ -n "$nodes" ]]; then
+                echo ""
+                echo "【${protocol^^} 协议节点】"
+                echo "$nodes"
+            fi
+        done
+
+        echo ""
+        echo "=========================================="
+        echo ""
+
+        # 选择上传模式
+        echo "请选择上传模式："
+        echo "1. 单个节点上传"
+        echo "2. 多个节点批量上传"
+        echo "3. 按协议批量上传"
+        echo ""
+        read -p "请选择模式 (1-3): " upload_mode
+
+        case $upload_mode in
+            1)
+                # 单个节点模式
+                echo ""
+                read -p "请输入节点ID: " server_id
+                read -p "请输入节点协议类型: " server_type
+
+                if [[ -z "$server_id" ]] || [[ -z "$server_type" ]]; then
+                    red "节点ID和协议类型不能为空"
+                    exit
+                fi
+
+                # 验证节点是否存在
+                node_exists=$(echo "$all_nodes_response" | jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\") | .name")
+                if [[ -z "$node_exists" ]]; then
+                    red "未找到指定的节点 (ID: ${server_id}, 类型: ${server_type})"
+                    exit
+                fi
+
+                green "找到节点: $node_exists"
+                selected_nodes="${server_id}:${server_type}"
+                ;;
+            2)
+                # 多个节点模式
+                echo ""
+                echo "=========================================="
+                echo "           多节点选择模式"
+                echo "=========================================="
+
+                # 显示所有节点供选择
+                echo ""
+                echo "可选择的节点列表："
+                echo "格式：[序号] ID:协议 - 节点名称"
+                echo ""
+
+                # 创建节点数组和显示列表
+                declare -a node_array
+                index=1
+
+                for protocol in "${protocols[@]}"; do
+                    nodes_data=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${protocol}\") | \"\(.id):\(.type):\(.name)\"")
+                    if [[ -n "$nodes_data" ]]; then
+                        while IFS= read -r node_info; do
+                            if [[ -n "$node_info" ]]; then
+                                node_array[$index]="$node_info"
+                                IFS=':' read -ra NODE_PARTS <<< "$node_info"
+                                node_id="${NODE_PARTS[0]}"
+                                node_type="${NODE_PARTS[1]}"
+                                node_name="${NODE_PARTS[2]}"
+                                printf "[%2d] %s:%s - %s\n" "$index" "$node_id" "$node_type" "$node_name"
+                                ((index++))
+                            fi
+                        done <<< "$nodes_data"
+                    fi
+                done
+
+                if [[ ${#node_array[@]} -eq 0 ]]; then
+                    red "没有可用的节点"
+                    exit
+                fi
+
+                echo ""
+                echo "请选择要上传解锁信息的节点："
+                echo "输入格式：单个序号(如: 1) 或 多个序号用逗号分隔(如: 1,3,5) 或 范围(如: 1-5)"
+                read -p "选择节点: " selection
+
+                if [[ -z "$selection" ]]; then
+                    red "请选择至少一个节点"
+                    exit
+                fi
+
+                # 解析用户选择
+                selected_nodes=""
+
+                # 处理范围选择 (如: 1-5)
+                if [[ "$selection" =~ ^[0-9]+-[0-9]+$ ]]; then
+                    IFS='-' read -ra RANGE <<< "$selection"
+                    start=${RANGE[0]}
+                    end=${RANGE[1]}
+
+                    for ((i=start; i<=end; i++)); do
+                        if [[ -n "${node_array[$i]}" ]]; then
+                            IFS=':' read -ra NODE_PARTS <<< "${node_array[$i]}"
+                            node_id="${NODE_PARTS[0]}"
+                            node_type="${NODE_PARTS[1]}"
+                            if [[ -n "$selected_nodes" ]]; then
+                                selected_nodes="${selected_nodes},${node_id}:${node_type}"
+                            else
+                                selected_nodes="${node_id}:${node_type}"
+                            fi
+                        fi
+                    done
+                else
+                    # 处理逗号分隔的选择 (如: 1,3,5)
+                    IFS=',' read -ra SELECTIONS <<< "$selection"
+                    for sel in "${SELECTIONS[@]}"; do
+                        sel=$(echo "$sel" | tr -d ' ') # 去除空格
+                        if [[ "$sel" =~ ^[0-9]+$ ]] && [[ -n "${node_array[$sel]}" ]]; then
+                            IFS=':' read -ra NODE_PARTS <<< "${node_array[$sel]}"
+                            node_id="${NODE_PARTS[0]}"
+                            node_type="${NODE_PARTS[1]}"
+                            if [[ -n "$selected_nodes" ]]; then
+                                selected_nodes="${selected_nodes},${node_id}:${node_type}"
+                            else
+                                selected_nodes="${node_id}:${node_type}"
+                            fi
+                        else
+                            red "无效的选择: $sel"
+                            exit
+                        fi
+                    done
+                fi
+
+                if [[ -z "$selected_nodes" ]]; then
+                    red "没有选择有效的节点"
+                    exit
+                fi
+
+                echo ""
+                green "已选择节点: $selected_nodes"
+                ;;
+            3)
+                # 按协议批量上传
+                echo ""
+                echo "可用协议："
+                echo "1. vmess"
+                echo "2. vless"
+                echo "3. trojan"
+                echo "4. shadowsocks"
+                echo "5. hysteria"
+                echo "6. tuic"
+                echo "7. anytls"
+                echo "8. 所有协议"
+                echo ""
+                read -p "请选择协议 (1-8): " protocol_choice
+
+                case $protocol_choice in
+                    1) target_protocol="vmess" ;;
+                    2) target_protocol="vless" ;;
+                    3) target_protocol="trojan" ;;
+                    4) target_protocol="shadowsocks" ;;
+                    5) target_protocol="hysteria" ;;
+                    6) target_protocol="tuic" ;;
+                    7) target_protocol="anytls" ;;
+                    8) target_protocol="all" ;;
+                    *)
+                        red "无效的选择"
+                        exit
+                        ;;
+                esac
+
+                # 获取指定协议的所有节点
+                if [[ "$target_protocol" == "all" ]]; then
+                    protocol_nodes=$(echo "$all_nodes_response" | jq -r '.data[] | "\(.id):\(.type)"')
+                else
+                    protocol_nodes=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${target_protocol}\") | \"\(.id):\(.type)\"")
+                fi
+
+                if [[ -z "$protocol_nodes" ]]; then
+                    red "未找到指定协议的节点"
+                    exit
+                fi
+
+                selected_nodes=$(echo "$protocol_nodes" | tr '\n' ',' | sed 's/,$//')
+                green "将上传到以下节点: $selected_nodes"
+                ;;
             *)
-                red "无效的选择，请输入 1-7 之间的数字"
+                red "无效的选择"
                 exit
                 ;;
         esac
 
-        green "已选择节点类型: $server_type"
-
-        # 显示该类型的可用节点
-        echo ""
-        echo "正在获取 ${server_type} 类型的节点列表..."
-
-        # 根据认证方式获取节点列表
-        if [[ "$auth_method" == "param" ]]; then
-            available_nodes=$(echo "$test_response2" | jq -r ".data[] | select(.type == \"${server_type}\") | \"ID: \(.id) - \(.name)\"")
-        else
-            available_nodes=$(echo "$test_response" | jq -r ".data[] | select(.type == \"${server_type}\") | \"ID: \(.id) - \(.name)\"")
-        fi
-
-        if [[ -z "$available_nodes" ]]; then
-            red "未找到 ${server_type} 类型的节点"
-            exit
-        fi
-
-        echo "可用的 ${server_type} 节点:"
-        echo "$available_nodes"
-        echo ""
-        read -p "请输入节点ID: " server_id
-
-        if [[ "${server_id}" = "" ]];then
-            red "请输入节点ID"
-            exit
-        fi
-
-        # 验证节点是否存在
-        if [[ "$auth_method" == "param" ]]; then
-            node_exists=$(echo "$test_response2" | jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\") | .name")
-        else
-            node_exists=$(echo "$test_response" | jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\") | .name")
-        fi
-
-        if [[ -z "$node_exists" ]]; then
-            red "未找到指定的节点 (ID: ${server_id}, 类型: ${server_type})"
-            exit
-        fi
-
-        green "找到节点: $node_exists"
-
+        # 保存配置
         echo "${panel_address}" > /root/.v2board.config
         echo "${auth_data}" >> /root/.v2board.config
-        echo "${server_id}" >> /root/.v2board.config
-        echo "${server_type}" >> /root/.v2board.config
+        echo "${selected_nodes}" >> /root/.v2board.config
+        echo "${upload_mode}" >> /root/.v2board.config
         echo "${auth_method:-header}" >> /root/.v2board.config
         echo "${secure_path}" >> /root/.v2board.config
 
@@ -1430,8 +1552,8 @@ postData() {
 
     panel_address=$(sed -n 1p /root/.v2board.config)
     auth_data=$(sed -n 2p /root/.v2board.config)
-    server_id=$(sed -n 3p /root/.v2board.config)
-    server_type=$(sed -n 4p /root/.v2board.config)
+    selected_nodes=$(sed -n 3p /root/.v2board.config)
+    upload_mode=$(sed -n 4p /root/.v2board.config)
     auth_method=$(sed -n 5p /root/.v2board.config)
     secure_path=$(sed -n 6p /root/.v2board.config)
 
@@ -1442,31 +1564,21 @@ postData() {
         runCheck
     fi
 
-    log "INFO" "正在获取当前服务器信息..."
+    log "INFO" "正在获取所有节点信息..."
 
-    # 根据认证方式获取当前服务器的tags信息
+    # 获取所有节点信息
     api_url="${panel_address}/api/v1/${secure_path}/server/manage/getNodes"
     if [[ "$auth_method" == "param" ]]; then
-        current_server=$(curl -s "${api_url}?auth_data=${auth_data}" | \
-            jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\")")
+        all_servers_response=$(curl -s "${api_url}?auth_data=${auth_data}")
     else
-        current_server=$(curl -s -H "Authorization: ${auth_data}" "${api_url}" | \
-            jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\")")
+        all_servers_response=$(curl -s -H "Authorization: ${auth_data}" "${api_url}")
     fi
 
-    if [[ -z "$current_server" ]]; then
-        log "ERROR" "无法获取服务器信息"
-        echo -e "$(red) 无法获取服务器信息，请检查配置"
+    if [[ -z "$all_servers_response" ]] || ! echo "$all_servers_response" | jq -e '.data' > /dev/null 2>&1; then
+        log "ERROR" "无法获取节点信息"
+        echo -e "$(red) 无法获取节点信息，请检查配置"
         exit
     fi
-
-    # 获取现有的tags，如果为null或空则设为空数组
-    current_tags=$(echo "$current_server" | jq -r '.tags // []')
-    if [[ "$current_tags" == "null" ]] || [[ -z "$current_tags" ]]; then
-        current_tags="[]"
-    fi
-
-    echo "当前tags格式: $current_tags"
 
     # 读取检测结果
     unlock_data=$(cat /root/media_test_tpl.json)
@@ -1475,116 +1587,181 @@ postData() {
     # 构建解锁信息标签（简单字符串格式，兼容现有格式）
     unlock_tags=()
 
-    # 解析解锁结果并生成标签（使用原始检测结果格式）
-    netflix_status=$(echo "$unlock_data" | jq -r '.Netflix // "Unknown"')
-    echo "Netflix状态: $netflix_status"
-    if [[ "$netflix_status" =~ ^Yes ]]; then
-        unlock_tags+=("Netflix:$netflix_status")
-        echo "添加标签: Netflix:$netflix_status"
-    fi
+    # 生成解锁标签函数
+    generateUnlockTags() {
 
-    disney_status=$(echo "$unlock_data" | jq -r '.DisneyPlus // "Unknown"')
-    echo "Disney+状态: $disney_status"
-    if [[ "$disney_status" =~ ^Yes ]]; then
-        unlock_tags+=("Disney+:$disney_status")
-        echo "添加标签: Disney+:$disney_status"
-    fi
+        # 解析解锁结果并生成标签（使用原始检测结果格式）
+        netflix_status=$(echo "$unlock_data" | jq -r '.Netflix // "Unknown"')
+        echo "Netflix状态: $netflix_status"
+        if [[ "$netflix_status" =~ ^Yes ]]; then
+            unlock_tags+=("Netflix:$netflix_status")
+            echo "添加标签: Netflix:$netflix_status"
+        fi
 
-    youtube_status=$(echo "$unlock_data" | jq -r '.YouTube // "Unknown"')
-    echo "YouTube状态: $youtube_status"
-    if [[ "$youtube_status" =~ ^Yes ]]; then
-        unlock_tags+=("YouTube:$youtube_status")
-        echo "添加标签: YouTube:$youtube_status"
-    fi
+        disney_status=$(echo "$unlock_data" | jq -r '.DisneyPlus // "Unknown"')
+        echo "Disney+状态: $disney_status"
+        if [[ "$disney_status" =~ ^Yes ]]; then
+            unlock_tags+=("Disney+:$disney_status")
+            echo "添加标签: Disney+:$disney_status"
+        fi
 
-    openai_status=$(echo "$unlock_data" | jq -r '.OpenAI // "Unknown"')
-    echo "OpenAI状态: $openai_status"
-    if [[ "$openai_status" =~ ^Yes ]]; then
-        unlock_tags+=("OpenAI:$openai_status")
-        echo "添加标签: OpenAI:$openai_status"
-    fi
+        youtube_status=$(echo "$unlock_data" | jq -r '.YouTube // "Unknown"')
+        echo "YouTube状态: $youtube_status"
+        if [[ "$youtube_status" =~ ^Yes ]]; then
+            unlock_tags+=("YouTube:$youtube_status")
+            echo "添加标签: YouTube:$youtube_status"
+        fi
 
-    bahamut_status=$(echo "$unlock_data" | jq -r '.BahamutAnime // "Unknown"')
-    echo "动画疯状态: $bahamut_status"
-    if [[ "$bahamut_status" =~ ^Yes ]]; then
-        unlock_tags+=("Bahamut:$bahamut_status")
-        echo "添加标签: Bahamut:$bahamut_status"
-    fi
+        openai_status=$(echo "$unlock_data" | jq -r '.OpenAI // "Unknown"')
+        echo "OpenAI状态: $openai_status"
+        if [[ "$openai_status" =~ ^Yes ]]; then
+            unlock_tags+=("OpenAI:$openai_status")
+            echo "添加标签: OpenAI:$openai_status"
+        fi
 
-    # 添加其他检测到的解锁服务
-    discovery_status=$(echo "$unlock_data" | jq -r '.DiscoveryPlus // "Unknown"')
-    echo "Discovery+状态: $discovery_status"
-    if [[ "$discovery_status" =~ ^Yes ]]; then
-        unlock_tags+=("Discovery+:$discovery_status")
-        echo "添加标签: Discovery+:$discovery_status"
-    fi
+        bahamut_status=$(echo "$unlock_data" | jq -r '.BahamutAnime // "Unknown"')
+        echo "动画疯状态: $bahamut_status"
+        if [[ "$bahamut_status" =~ ^Yes ]]; then
+            unlock_tags+=("Bahamut:$bahamut_status")
+            echo "添加标签: Bahamut:$bahamut_status"
+        fi
 
-    paramount_status=$(echo "$unlock_data" | jq -r '.ParamountPlus // "Unknown"')
-    echo "Paramount+状态: $paramount_status"
-    if [[ "$paramount_status" =~ ^Yes ]]; then
-        unlock_tags+=("Paramount+:$paramount_status")
-        echo "添加标签: Paramount+:$paramount_status"
-    fi
+        # 添加其他检测到的解锁服务
+        discovery_status=$(echo "$unlock_data" | jq -r '.DiscoveryPlus // "Unknown"')
+        echo "Discovery+状态: $discovery_status"
+        if [[ "$discovery_status" =~ ^Yes ]]; then
+            unlock_tags+=("Discovery+:$discovery_status")
+            echo "添加标签: Discovery+:$discovery_status"
+        fi
 
-    echo "生成的解锁标签数组: ${unlock_tags[@]}"
+        paramount_status=$(echo "$unlock_data" | jq -r '.ParamountPlus // "Unknown"')
+        echo "Paramount+状态: $paramount_status"
+        if [[ "$paramount_status" =~ ^Yes ]]; then
+            unlock_tags+=("Paramount+:$paramount_status")
+            echo "添加标签: Paramount+:$paramount_status"
+        fi
 
-    # 移除现有的解锁相关标签，保留用户自定义标签
-    # 更新过滤规则，匹配新的标签格式（服务名:状态）
-    filtered_tags=$(echo "$current_tags" | jq '[.[] | select(. | test("(Netflix|Disney\\+|YouTube|OpenAI|Bahamut|Discovery\\+|Paramount\\+):") | not)]')
-    echo "过滤后的用户标签: $filtered_tags"
+        echo "生成的解锁标签数组: ${unlock_tags[@]}"
+    }
 
-    # 添加新的解锁标签
-    new_tags="$filtered_tags"
-    for tag in "${unlock_tags[@]}"; do
-        new_tags=$(echo "$new_tags" | jq --arg tag "$tag" '. + [$tag]')
+    # 生成解锁标签
+    generateUnlockTags
+
+    # 上传单个节点的函数
+    uploadToSingleNode() {
+        local node_id=$1
+        local node_type=$2
+
+        echo ""
+        echo "=========================================="
+        echo "正在处理节点: ID=$node_id, 类型=$node_type"
+        echo "=========================================="
+
+        # 获取当前节点信息
+        current_server=$(echo "$all_servers_response" | jq -r ".data[] | select(.id == ${node_id} and .type == \"${node_type}\")")
+
+        if [[ -z "$current_server" ]]; then
+            red "未找到节点 (ID: ${node_id}, 类型: ${node_type})"
+            return 1
+        fi
+
+        node_name=$(echo "$current_server" | jq -r '.name')
+        echo "节点名称: $node_name"
+
+        # 获取现有的tags，如果为null或空则设为空数组
+        current_tags=$(echo "$current_server" | jq -r '.tags // []')
+        if [[ "$current_tags" == "null" ]] || [[ -z "$current_tags" ]]; then
+            current_tags="[]"
+        fi
+
+        echo "当前tags: $current_tags"
+
+        # 移除现有的解锁相关标签，保留用户自定义标签
+        filtered_tags=$(echo "$current_tags" | jq '[.[] | select(. | test("(Netflix|Disney\\+|YouTube|OpenAI|Bahamut|Discovery\\+|Paramount\\+):") | not)]')
+        echo "过滤后的用户标签: $filtered_tags"
+
+        # 添加新的解锁标签
+        new_tags="$filtered_tags"
+        for tag in "${unlock_tags[@]}"; do
+            new_tags=$(echo "$new_tags" | jq --arg tag "$tag" '. + [$tag]')
+        done
+
+        echo "合并后的完整tags: $new_tags"
+
+        # 提取所有必需的字段
+        server_data=$(echo "$current_server" | jq --argjson new_tags "$new_tags" '. + {tags: $new_tags}')
+
+        # 调用V2Board现有的服务器保存API
+        save_url="${panel_address}/api/v1/${secure_path}/server/${node_type}/save"
+        echo "保存URL: $save_url"
+
+        if [[ "$auth_method" == "param" ]]; then
+            server_data_with_auth=$(echo "$server_data" | jq --arg auth_data "$auth_data" '. + {auth_data: $auth_data}')
+            curl -s -X POST \
+                -H "Content-Type: application/json" \
+                -d "$server_data_with_auth" \
+                "${save_url}" > "/root/.v2board.response.${node_id}"
+        else
+            curl -s -X POST \
+                -H "Content-Type: application/json" \
+                -H "Authorization: ${auth_data}" \
+                -d "$server_data" \
+                "${save_url}" > "/root/.v2board.response.${node_id}"
+        fi
+
+        # 检查响应
+        response=$(cat "/root/.v2board.response.${node_id}")
+        echo "API响应: $response"
+
+        if echo "$response" | grep -q '"data"'; then
+            green "✓ 节点 $node_name (ID: $node_id) 解锁信息上传成功"
+            return 0
+        else
+            red "✗ 节点 $node_name (ID: $node_id) 解锁信息上传失败"
+            echo "错误信息: $response"
+            return 1
+        fi
+    }
+
+    # 处理多节点上传
+    log "INFO" "开始批量上传解锁信息..."
+
+    success_count=0
+    fail_count=0
+
+    # 解析节点列表并逐个上传
+    IFS=',' read -ra NODES <<< "$selected_nodes"
+    for node_entry in "${NODES[@]}"; do
+        IFS=':' read -ra NODE_INFO <<< "$node_entry"
+        node_id="${NODE_INFO[0]}"
+        node_type="${NODE_INFO[1]}"
+
+        if uploadToSingleNode "$node_id" "$node_type"; then
+            ((success_count++))
+        else
+            ((fail_count++))
+        fi
     done
 
-    echo "合并后的完整tags: $new_tags"
+    echo ""
+    echo "=========================================="
+    echo "批量上传完成"
+    echo "成功: $success_count 个节点"
+    echo "失败: $fail_count 个节点"
+    echo "=========================================="
 
-    # 获取完整的节点信息，只更新tags字段
-    log "INFO" "正在准备完整的节点数据..."
-
-    echo "当前节点信息: $current_server"
-    echo "新的tags: $new_tags"
-
-    # 提取所有必需的字段
-    server_data=$(echo "$current_server" | jq --argjson new_tags "$new_tags" '. + {tags: $new_tags}')
-
-    echo "准备提交的完整数据: $server_data"
-
-    # 调用V2Board现有的服务器保存API
-    log "INFO" "正在上传解锁信息到V2Board..."
-    save_url="${panel_address}/api/v1/${secure_path}/server/${server_type}/save"
-    echo "保存URL: $save_url"
-
-    if [[ "$auth_method" == "param" ]]; then
-        server_data_with_auth=$(echo "$server_data" | jq --arg auth_data "$auth_data" '. + {auth_data: $auth_data}')
-        echo "带认证的数据: $server_data_with_auth"
-        curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -d "$server_data_with_auth" \
-            "${save_url}" > /root/.v2board.response
-    else
-        echo "使用Authorization头认证"
-        curl -s -X POST \
-            -H "Content-Type: application/json" \
-            -H "Authorization: ${auth_data}" \
-            -d "$server_data" \
-            "${save_url}" > /root/.v2board.response
+    if [[ $success_count -gt 0 ]]; then
+        log "INFO" "批量上传部分或全部成功"
+        echo -e "$(green) 成功上传 $success_count 个节点的解锁信息"
     fi
 
-    # 检查响应
-    response=$(cat /root/.v2board.response)
-    if echo "$response" | grep -q '"data":true'; then
-        log "INFO" "解锁信息上传成功"
-        echo -e "$(green) 解锁信息已成功上传到V2Board"
-    else
-        log "ERROR" "解锁信息上传失败: $response"
-        echo -e "$(red) 解锁信息上传失败，请检查配置"
-        echo -e "$(red) 响应内容: $response"
+    if [[ $fail_count -gt 0 ]]; then
+        log "ERROR" "部分节点上传失败"
+        echo -e "$(red) $fail_count 个节点上传失败，请检查日志"
     fi
 
-    rm -rf /root/media_test_tpl.json /root/.v2board.response
+    # 清理临时文件
+    rm -rf /root/media_test_tpl.json /root/.v2board.response.*
 }
 
 printInfo() {
