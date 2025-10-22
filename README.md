@@ -29,9 +29,6 @@
 - 项目地址：[V2board-theme-NexGen](https://github.com/q42602736/V2board-theme-NexGen-)
 - 技术支持：随时为您服务
 
----
-*让您的V2board焕然一新* ✨
-
 
 **现代化的 V2Board 主题 - Luck**
 
