@@ -10,6 +10,29 @@
 
 [![Telegram](https://img.shields.io/badge/Telegram-Theme_Luck-2CA5E0?style=for-the-badge&logo=telegram&logoColor=white)](https://t.me/fluentboard666)
 
+# 🎨 V2board NexGen 主题
+
+> 全新前端主题已正式发布！为您的V2board带来现代化的用户体验
+
+## ✨ 主题特色
+
+- 🚀 现代化设计语言
+- 📱 完美响应式布局
+- 🎯 优化用户体验
+- ⚡ 高性能加载
+
+## 🛒 商务咨询
+
+**新主题现已发布，欢迎各位老板咨询！**
+
+📞 **联系方式**
+- 项目地址：[V2board-theme-NexGen](https://github.com/q42602736/V2board-theme-NexGen-)
+- 技术支持：随时为您服务
+
+---
+*让您的V2board焕然一新* ✨
+
+
 **现代化的 V2Board 主题 - Luck**
 
 一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 主题项目，理论支持V2BOARD和Xboard（未测试），提供优雅的用户体验和完整的功能支持。
