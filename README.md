@@ -308,7 +308,7 @@ chmod +x start.sh
 # 编辑配置文件
 nano /www/wwwroot/your-domain.com/server/config.json
 
-# 配置会实时生效，无需重启
+# 配置更改后使用pm2 restart v2board-api进行重启后生效
 ```
 
 
