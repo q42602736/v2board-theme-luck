@@ -184,14 +184,29 @@ import { darkTheme } from 'naive-ui'
    └── ...
    ```
 
-**步骤 3：配置伪静态**
-1. 在网站设置中点击 `伪静态`
-2. 选择 `自定义` 并添加以下规则：
-   ```nginx
-   location / {
-       try_files $uri $uri/ /index.html;
-   }
-   ```
+#### 3. 配置Nginx
+1. 点击网站「设置」→「配置文件」
+2. 在`server`块中添加以下配置：
+
+```nginx
+# API代理配置
+location /api/ {
+    proxy_pass http://localhost:3001;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+}
+
+# 安全配置：禁止访问server目录（重要！）
+location ^~ /server/ {
+    return 403;
+}
+
+# 伪静态配置（Vue Router支持）
+location / {
+    try_files $uri $uri/ /index.html;
+}
+```
 3. 点击 `保存`
 
 **步骤 4：SSL 配置（可选但推荐）**
@@ -274,41 +289,18 @@ cd /www/wwwroot/your-domain.com
 # 给启动脚本执行权限
 chmod +x start.sh
 
-# 后台启动API服务器
-nohup ./start.sh > api.log 2>&1 &
+📊 管理命令:"
+查看状态: pm2 status"
 
-# 查看启动状态
-ps aux | grep api-server
-tail -f api.log
+查看日志: pm2 logs v2board-api"
 
-# 停止API服务器
-pkill -f "api-server" || pkill -f "start.sh"
+停止服务: pm2 stop v2board-api"
 
-# 重启API服务器
-pkill -f "api-server" || pkill -f "start.sh"
-sleep 2
-nohup ./start.sh > api.log 2>&1 &
+重启服务: pm2 restart v2board-api"
 
-# 查看进程状态
-ps aux | grep api-server
+删除进程: pm2 delete v2board-api"
 ```
-**2. 添加站点NGINX配置**
-
-在您的NGINX配置文件中添加API代理：
-
-```# 在现有的server { } 块内部添加这个location
-   location /api/ {
-    proxy_pass http://localhost:3001;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-    }
-    location ^~ /server/ {
-    return 403;
-    }
-
-```
-**3. 配置管理**
+**2. 配置管理**
 
 要更改配置，直接编辑项目 `server/config.json` 文件：
 
