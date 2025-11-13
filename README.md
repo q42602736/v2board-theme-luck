@@ -281,6 +281,9 @@ cd /www/wwwroot/your-domain.com
 # 给启动脚本执行权限
 chmod +x start.sh
 
+# 启动安装脚本
+./start.sh
+
 📊 管理命令:"
 查看状态: pm2 status"
 
