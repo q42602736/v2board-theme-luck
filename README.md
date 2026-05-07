@@ -34,7 +34,7 @@
 
 一个基于 Vue 3 + TypeScript + Naive UI 构建的现代化 V2Board 主题项目，理论支持V2BOARD和Xboard（未测试），提供优雅的用户体验和完整的功能支持。
 
-[在线演示](https://demo.example.com) · [文档](https://docs.example.com) · [问题反馈](https://github.com/your-username/v2board-theme-luck/issues) · [📢 TG频道](https://t.me/fluentboard666)
+[在线演示](https://nexgen.afeicloud.de)  · [问题反馈](https://github.com/your-username/v2board-theme-luck/issues) · [📢 TG频道](https://t.me/fluentboard666)
 
 # 面板魔改服务
 
