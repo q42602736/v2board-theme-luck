@@ -1,4 +1,24 @@
 #!/bin/bash
+###############################################################################
+#                                                                             #
+#  流媒体解锁检测脚本 - 支持 V2Board 和 Xboard 面板                         #
+#                                                                             #
+#  功能：                                                                     #
+#  - 检测 Netflix、Disney+、YouTube Premium、OpenAI 等流媒体解锁状态       #
+#  - 支持 DNS 解锁配置                                                       #
+#  - 自动上传检测结果到面板节点标签                                         #
+#  - 支持定时任务自动检测                                                   #
+#                                                                             #
+#  面板支持：                                                                 #
+#  - V2Board (API v1)                                                        #
+#  - Xboard (API v2)                                                         #
+#                                                                             #
+#  使用方法：                                                                 #
+#  1. 首次运行：./media_unlock.sh（交互式配置）                            #
+#  2. 后续运行：./media_unlock.sh -S（跳过配置，使用已保存的配置）        #
+#                                                                             #
+###############################################################################
+
 shopt -s expand_aliases
 Font_Black="\033[30m"
 Font_Red="\033[31m"
@@ -52,7 +72,9 @@ configureUnlock() {
         read -p "Discovery+ 解锁 DNS [回车使用系统默认]: " discovery_dns
         read -p "Paramount+ 解锁 DNS [回车使用系统默认]: " paramount_dns
         read -p "OpenAI (ChatGPT) 解锁 DNS [回车使用系统默认]: " openai_dns
+        read -p "Google Gemini 解锁 DNS [回车使用系统默认]: " gemini_dns
         read -p "YouTube Premium 解锁 DNS [回车使用系统默认]: " youtube_dns
+        read -p "TikTok 解锁 DNS [回车使用系统默认]: " tiktok_dns
 
         echo
         echo "正在生成配置文件..."
@@ -65,7 +87,9 @@ BAHAMUT_ADDR="$bahamut_dns"
 DISCOVERY_ADDR="$discovery_dns"
 PARAMOUNT_ADDR="$paramount_dns"
 OPENAI_ADDR="$openai_dns"
+GEMINI_ADDR="$gemini_dns"
 YOUTUBE_ADDR="$youtube_dns"
+TIKTOK_ADDR="$tiktok_dns"
 EOF
 
         # 检查编码并转换
@@ -112,6 +136,12 @@ getUnlockAddr() {
                 ;;
             "openai")
                 echo "$OPENAI_ADDR"
+                ;;
+            "gemini")
+                echo "$GEMINI_ADDR"
+                ;;
+            "tiktok")
+                echo "$TIKTOK_ADDR"
                 ;;
         esac
     fi
@@ -1109,10 +1139,127 @@ OpenAiUnlockTest()
     log "INFO" "检测完成"
 }
 
+MediaUnlockTest_Gemini() {
+    log "INFO" "开始检测 Google Gemini..."
+
+    # 重置之前的参数
+    useResolve=""
+    xForward=""
+
+    log "DEBUG" "步骤1：DNS解析检测"
+    testDNSAndSetXFF "gemini" "gemini.google.com"
+    if [[ $? != 0 ]]; then
+        log "ERROR" "DNS解析失败"
+        echo -n -e "\r Google Gemini:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
+        modifyJsonTemplate 'Gemini_result' 'No' 'DNS_ERROR'
+        return
+    fi
+    log "DEBUG" "DNS解析成功"
+
+    log "DEBUG" "步骤2：获取页面内容"
+    local tmpresult=$(curl $useNIC $usePROXY $useResolve $xForward \
+        --user-agent "${UA_Browser}" \
+        -sL --max-time 10 \
+        "https://gemini.google.com" 2>&1)
+
+    if [[ "$tmpresult" == "curl"* ]]; then
+        log "ERROR" "网络连接失败"
+        echo -n -e "\r Google Gemini:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
+        modifyJsonTemplate 'Gemini_result' 'No'
+        return
+    fi
+
+    log "DEBUG" "步骤3：解析检测结果"
+    # 检查是否包含解锁标记
+    local result=$(echo "$tmpresult" | grep -q '45631641,null,true' && echo "Yes" || echo "")
+    # 提取国家代码
+    local countrycode=$(echo "$tmpresult" | grep -o ',2,1,200,"[A-Z]\{3\}"' | sed 's/,2,1,200,"//;s/"//' || echo "")
+
+    if [ -n "$result" ] && [ -n "$countrycode" ]; then
+        log "INFO" "解锁成功，区域: ${countrycode}"
+        echo -n -e "\r Google Gemini:\t\t${Font_Green}Yes (Region: ${countrycode})${Font_Suffix}\n"
+        modifyJsonTemplate 'Gemini_result' 'Yes' "${countrycode}"
+    elif [ -n "$result" ]; then
+        log "INFO" "解锁成功"
+        echo -n -e "\r Google Gemini:\t\t\t\t${Font_Green}Yes${Font_Suffix}\n"
+        modifyJsonTemplate 'Gemini_result' 'Yes'
+    else
+        log "INFO" "未解锁"
+        echo -n -e "\r Google Gemini:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
+        modifyJsonTemplate 'Gemini_result' 'No'
+    fi
+
+    log "INFO" "检测完成"
+}
+
+MediaUnlockTest_TikTok() {
+    log "INFO" "开始检测 TikTok..."
+
+    # 重置之前的参数
+    useResolve=""
+    xForward=""
+
+    log "DEBUG" "步骤1：DNS解析检测"
+    testDNSAndSetXFF "tiktok" "www.tiktok.com"
+    if [[ $? != 0 ]]; then
+        log "ERROR" "DNS解析失败"
+        echo -n -e "\r TikTok Region:\t\t\t\t${Font_Red}Failed (DNS Error)${Font_Suffix}\n"
+        modifyJsonTemplate 'TikTok_result' 'No' 'DNS_ERROR'
+        return
+    fi
+    log "DEBUG" "DNS解析成功"
+
+    log "DEBUG" "步骤2：获取页面内容"
+    local Ftmpresult=$(curl $useNIC $usePROXY $useResolve $xForward \
+        --user-agent "${UA_Browser}" \
+        -s --max-time 10 \
+        "https://www.tiktok.com/" 2>&1)
+
+    if [[ "$Ftmpresult" == "curl"* ]]; then
+        log "ERROR" "网络连接失败"
+        echo -n -e "\r TikTok Region:\t\t\t\t${Font_Red}Failed (Network Connection)${Font_Suffix}\n"
+        modifyJsonTemplate 'TikTok_result' 'No'
+        return
+    fi
+
+    log "DEBUG" "步骤3：解析地区信息"
+    local FRegion=$(echo "$Ftmpresult" | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
+    
+    if [ -n "$FRegion" ]; then
+        log "INFO" "解锁成功，区域: ${FRegion}"
+        echo -n -e "\r TikTok Region:\t\t\t\t${Font_Green}Yes (Region: ${FRegion})${Font_Suffix}\n"
+        modifyJsonTemplate 'TikTok_result' 'Yes' "${FRegion}"
+        return
+    fi
+
+    log "DEBUG" "步骤4：使用gzip方式重试"
+    local STmpresult=$(curl $useNIC $usePROXY $useResolve $xForward \
+        --user-agent "${UA_Browser}" \
+        -sL --max-time 10 \
+        -H "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9" \
+        -H "Accept-Encoding: gzip" \
+        -H "Accept-Language: en" \
+        "https://www.tiktok.com" 2>&1 | gunzip 2>/dev/null)
+    
+    local SRegion=$(echo "$STmpresult" | grep '"region":' | sed 's/.*"region"//' | cut -f2 -d'"')
+    
+    if [ -n "$SRegion" ]; then
+        log "INFO" "解锁成功（可能为IDC IP），区域: ${SRegion}"
+        echo -n -e "\r TikTok Region:\t\t\t\t${Font_Yellow}Yes (Region: ${SRegion}) (IDC IP)${Font_Suffix}\n"
+        modifyJsonTemplate 'TikTok_result' 'Yes' "${SRegion}"
+        return
+    fi
+
+    log "INFO" "未解锁"
+    echo -n -e "\r TikTok Region:\t\t\t\t${Font_Red}No${Font_Suffix}\n"
+    modifyJsonTemplate 'TikTok_result' 'No'
+    
+    log "INFO" "检测完成"
+}
+
 ###########################################
 #                                         #
-#   sspanel unlock check function code    #
-#                                         #
+#   sspanel unlock check function code                                            #
 ###########################################
 
 createJsonTemplate() {
@@ -1123,7 +1270,9 @@ createJsonTemplate() {
     "DiscoveryPlus": "DiscoveryPlus_result",
     "ParamountPlus": "ParamountPlus_result",
     "BahamutAnime": "BahamutAnime_result",
-    "OpenAI": "OpenAI_result"
+    "OpenAI": "OpenAI_result",
+    "Gemini": "Gemini_result",
+    "TikTok": "TikTok_result"
 }' > /root/media_test_tpl.json
 }
 
@@ -1151,17 +1300,17 @@ setCronTask() {
 
         crontab -l >/root/crontab.list 2>/dev/null
         if [[ "$execution_time_unit" == "minute" ]]; then
-            echo "*/${execution_time_interval} * * * * /bin/bash /root/v2board.sh -S" >>/root/crontab.list
+            echo "*/${execution_time_interval} * * * * /bin/bash /root/media_unlock.sh -S" >>/root/crontab.list
             green "定时任务添加成功！每 ${execution_time_interval} 分钟自动执行一次检测"
         else
-            echo "0 */${execution_time_interval} * * * /bin/bash /root/v2board.sh -S" >>/root/crontab.list
+            echo "0 */${execution_time_interval} * * * /bin/bash /root/media_unlock.sh -S" >>/root/crontab.list
             green "定时任务添加成功！每 ${execution_time_interval} 小时自动执行一次检测"
         fi
         crontab /root/crontab.list
         rm -rf /root/crontab.list
     }
 
-    crontab -l | grep "v2board.sh" >/dev/null
+    crontab -l | grep "media_unlock.sh" >/dev/null
     if [[ "$?" != "0" ]]; then
         echo "设置自动检测任务"
         echo "----------------------------------------"
@@ -1219,20 +1368,44 @@ setCronTask() {
         esac
     else
         yellow "定时任务已存在，无需修改先手动删除"
-        yellow "删除命令: crontab -l | grep -v v2board.sh | crontab -"
+        yellow "删除命令: crontab -l | grep -v media_unlock.sh | crontab -"
     fi
 }
 
 checkConfig() {
     getConfig() {
-        echo "V2Board 流媒体解锁检测配置"
+        echo "流媒体解锁检测配置"
         echo "----------------------------------------"
-        read -p "请输入V2Board面板地址 (例如: https://demo.v2board.com): " panel_address
+        echo "请选择面板类型："
+        echo "[1] V2Board"
+        echo "[2] Xboard"
+        echo "----------------------------------------"
+        read -p "请输入选项 (1 或 2): " panel_type_choice
+        
+        case $panel_type_choice in
+            1)
+                panel_type="v2board"
+                api_version="v1"
+                green "已选择 V2Board 面板"
+                ;;
+            2)
+                panel_type="xboard"
+                api_version="v2"
+                green "已选择 Xboard 面板"
+                ;;
+            *)
+                red "无效的选择"
+                exit
+                ;;
+        esac
+        
+        echo ""
+        read -p "请输入面板地址 (例如: https://demo.example.com): " panel_address
         read -p "请输入管理员邮箱: " admin_email
         read -p "请输入管理员密码: " admin_password
         echo ""
-        echo "请输入V2Board管理员路径（secure_path）"
-        echo "提示：在V2Board后台URL中可以看到，例如：admin、manage、backend等"
+        echo "请输入管理员路径（secure_path）"
+        echo "提示：在后台URL中可以看到，例如：admin、manage、backend等"
         read -p "管理员路径 (secure_path): " secure_path
         echo ""
 
@@ -1246,12 +1419,12 @@ checkConfig() {
 
         # 登录获取认证数据
         echo "正在登录验证..."
-        echo "尝试登录URL: ${panel_address}/api/v1/passport/auth/login"
+        echo "尝试登录URL: ${panel_address}/api/${api_version}/passport/auth/login"
 
         login_response=$(curl -s -X POST \
             -H "Content-Type: application/json" \
             -d "{\"email\": \"${admin_email}\", \"password\": \"${admin_password}\"}" \
-            "${panel_address}/api/v1/passport/auth/login")
+            "${panel_address}/api/${api_version}/passport/auth/login")
 
         echo "登录响应: $login_response"
 
@@ -1275,7 +1448,7 @@ checkConfig() {
 
         # 测试API连接
         echo "正在测试API权限..."
-        api_url="${panel_address}/api/v1/${secure_path}/server/manage/getNodes"
+        api_url="${panel_address}/api/${api_version}/${secure_path}/server/manage/getNodes"
         echo "尝试API URL: $api_url"
         echo "使用认证: Authorization: ${auth_data}"
 
@@ -1323,10 +1496,15 @@ checkConfig() {
         echo "           可用节点列表（按协议分组）"
         echo "=========================================="
 
-        protocols=("vmess" "vless" "trojan" "shadowsocks" "hysteria" "tuic" "anytls")
+        # 旧节点直接使用 type 表示协议；新版统一节点使用 type=v2node、protocol 表示协议。
+        protocols=("vmess" "vless" "trojan" "shadowsocks" "hysteria" "hysteria2" "tuic" "anytls")
 
         for protocol in "${protocols[@]}"; do
-            nodes=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${protocol}\") | \"ID: \(.id) - \(.name)\"")
+            nodes=$(echo "$all_nodes_response" | jq -r --arg protocol "$protocol" '
+                .data[]
+                | select(.type == $protocol or (.type == "v2node" and .protocol == $protocol))
+                | "ID: \(.id) - \(.name) [类型: \(.type)]"
+            ')
             if [[ -n "$nodes" ]]; then
                 echo ""
                 echo "【${protocol^^} 协议节点】"
@@ -1351,15 +1529,24 @@ checkConfig() {
                 # 单个节点模式
                 echo ""
                 read -p "请输入节点ID: " server_id
-                read -p "请输入节点协议类型: " server_type
+                read -p "请输入节点类型（统一节点填写 v2node）: " server_type
 
                 if [[ -z "$server_id" ]] || [[ -z "$server_type" ]]; then
-                    red "节点ID和协议类型不能为空"
+                    red "节点ID和节点类型不能为空"
+                    exit
+                fi
+
+                if ! [[ "$server_id" =~ ^[0-9]+$ ]] || ! [[ "$server_type" =~ ^[a-z0-9_]+$ ]]; then
+                    red "节点ID或节点类型格式无效"
                     exit
                 fi
 
                 # 验证节点是否存在
-                node_exists=$(echo "$all_nodes_response" | jq -r ".data[] | select(.id == ${server_id} and .type == \"${server_type}\") | .name")
+                node_exists=$(echo "$all_nodes_response" | jq -r \
+                    --argjson node_id "$server_id" \
+                    --arg node_type "$server_type" \
+                    '.data[] | select(.id == $node_id and .type == $node_type) | .name' \
+                    | head -n 1)
                 if [[ -z "$node_exists" ]]; then
                     red "未找到指定的节点 (ID: ${server_id}, 类型: ${server_type})"
                     exit
@@ -1375,85 +1562,123 @@ checkConfig() {
                 echo "           多节点选择模式"
                 echo "=========================================="
 
-                # 显示所有节点供选择
-                echo ""
-                echo "可选择的节点列表："
-                echo "格式：[序号] ID:协议 - 节点名称"
-                echo ""
+                # 检查并安装 whiptail 或 dialog 工具
+                if ! command -v whiptail &> /dev/null && ! command -v dialog &> /dev/null; then
+                    echo "正在安装交互式界面工具..."
+                    if [ "$is_debian" == 1 ]; then
+                        $InstallMethod update >/dev/null 2>&1
+                        $InstallMethod install whiptail -y >/dev/null 2>&1 || $InstallMethod install dialog -y >/dev/null 2>&1
+                    elif [ "$is_redhat" == 1 ]; then
+                        $InstallMethod makecache >/dev/null 2>&1
+                        $InstallMethod install newt -y >/dev/null 2>&1 || $InstallMethod install dialog -y >/dev/null 2>&1
+                    elif [ "$is_macos" == 1 ]; then
+                        $InstallMethod install dialog >/dev/null 2>&1
+                    fi
+                fi
 
-                # 创建节点数组和显示列表
-                declare -a node_array
-                index=1
+                # 检查是否有 whiptlog 工具
+                if command -v whiptail &> /dev/null; then
+                    dialog_tool="whiptail"
+                elif command -v dialog &> /dev/null; then
+                    dialog_tool="dialog"
+                else
+                    dialog_tool=""
+                fi
+
+                # 构建节点列表
+                declare -a node_list
+                declare -a node_keys
+                index=0
 
                 for protocol in "${protocols[@]}"; do
-                    nodes_data=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${protocol}\") | \"\(.id):\(.type):\(.name)\"")
+                    nodes_data=$(echo "$all_nodes_response" | jq -r --arg protocol "$protocol" '
+                        .data[]
+                        | select(.type == $protocol or (.type == "v2node" and .protocol == $protocol))
+                        | [.id, .type, .name]
+                        | @tsv
+                    ')
                     if [[ -n "$nodes_data" ]]; then
-                        while IFS= read -r node_info; do
-                            if [[ -n "$node_info" ]]; then
-                                node_array[$index]="$node_info"
-                                IFS=':' read -ra NODE_PARTS <<< "$node_info"
-                                node_id="${NODE_PARTS[0]}"
-                                node_type="${NODE_PARTS[1]}"
-                                node_name="${NODE_PARTS[2]}"
-                                printf "[%2d] %s:%s - %s\n" "$index" "$node_id" "$node_type" "$node_name"
+                        while IFS=$'\t' read -r node_id node_type node_name; do
+                            if [[ -n "$node_id" ]] && [[ -n "$node_type" ]]; then
+                                node_key="${node_id}:${node_type}"
+                                node_keys[$index]="$node_key"
+                                node_list[$index]="[${protocol^^}] ID:${node_id} - ${node_name}"
                                 ((index++))
                             fi
                         done <<< "$nodes_data"
                     fi
                 done
 
-                if [[ ${#node_array[@]} -eq 0 ]]; then
+                if [[ ${#node_list[@]} -eq 0 ]]; then
                     red "没有可用的节点"
                     exit
                 fi
 
-                echo ""
-                echo "请选择要上传解锁信息的节点："
-                echo "输入格式：单个序号(如: 1) 或 多个序号用逗号分隔(如: 1,3,5) 或 范围(如: 1-5)"
-                read -p "选择节点: " selection
+                # 使用交互式界面或传统输入
+                if [[ -n "$dialog_tool" ]]; then
+                    # 构建 whiptail/dialog 参数
+                    menu_items=()
+                    for i in "${!node_list[@]}"; do
+                        menu_items+=("$i" "${node_list[$i]}" "OFF")
+                    done
 
-                if [[ -z "$selection" ]]; then
-                    red "请选择至少一个节点"
-                    exit
-                fi
+                    # 显示复选框界面
+                    if [[ "$dialog_tool" == "whiptail" ]]; then
+                        selection=$(whiptail --title "选择节点" --checklist "使用空格键选择/取消，方向键移动，回车确认：" 20 78 12 "${menu_items[@]}" 3>&1 1>&2 2>&3)
+                    else
+                        selection=$(dialog --stdout --title "选择节点" --checklist "使用空格键选择/取消，方向键移动，回车确认：" 20 78 12 "${menu_items[@]}")
+                    fi
 
-                # 解析用户选择
-                selected_nodes=""
+             # 检查用户是否取消
+                    if [[ $? -ne 0 ]] || [[ -z "$selection" ]]; then
+                        red "已取消选择"
+                        exit
+                    fi
 
-                # 处理范围选择 (如: 1-5)
-                if [[ "$selection" =~ ^[0-9]+-[0-9]+$ ]]; then
-                    IFS='-' read -ra RANGE <<< "$selection"
-                    start=${RANGE[0]}
-                    end=${RANGE[1]}
-
-                    for ((i=start; i<=end; i++)); do
-                        if [[ -n "${node_array[$i]}" ]]; then
-                            IFS=':' read -ra NODE_PARTS <<< "${node_array[$i]}"
-                            node_id="${NODE_PARTS[0]}"
-                            node_type="${NODE_PARTS[1]}"
-                            if [[ -n "$selected_nodes" ]]; then
-                                selected_nodes="${selected_nodes},${node_id}:${node_type}"
-                            else
-                                selected_nodes="${node_id}:${node_type}"
-                            fi
+                    # 解析选择结果
+                    selected_nodes=""
+                    for idx in $selection; do
+                        idx=$(echo "$idx" | tr -d '"')
+                        node_key="${node_keys[$idx]}"
+                        if [[ -n "$selected_nodes" ]]; then
+                            selected_nodes="${selected_nodes},${node_key}"
+                        else
+                            selected_nodes="${node_key}"
                         fi
                     done
+
                 else
-                    # 处理逗号分隔的选择 (如: 1,3,5)
+                    # 传统文本界面
+                    echo ""
+                    echo "可选择的节点列表："
+                    echo ""
+                    for i in "${!node_list[@]}"; do
+                        printf "[%2d] %s\n" "$i" "${node_list[$i]}"
+                    done
+                    echo ""
+                    echo "请输入要上传解锁信息的节点序号："
+                    echo "输入格式：单个序号(如: 0) 或 多个序号用逗号分隔(如: 0,2,5)"
+                    read -p "节点序号: " selection
+
+               if [[ -z "$selection" ]]; then
+                        red "请输入至少一个节点序号"
+                        exit
+                    fi
+
+                    # 解析用户选择
+                    selected_nodes=""
                     IFS=',' read -ra SELECTIONS <<< "$selection"
                     for sel in "${SELECTIONS[@]}"; do
-                        sel=$(echo "$sel" | tr -d ' ') # 去除空格
-                        if [[ "$sel" =~ ^[0-9]+$ ]] && [[ -n "${node_array[$sel]}" ]]; then
-                            IFS=':' read -ra NODE_PARTS <<< "${node_array[$sel]}"
-                            node_id="${NODE_PARTS[0]}"
-                            node_type="${NODE_PARTS[1]}"
+                        sel=$(echo "$sel" | tr -d ' ')
+                        if [[ "$sel" =~ ^[0-9]+$ ]] && [[ $sel -lt ${#node_keys[@]} ]]; then
+                            node_key="${node_keys[$sel]}"
                             if [[ -n "$selected_nodes" ]]; then
-                                selected_nodes="${selected_nodes},${node_id}:${node_type}"
+                                selected_nodes="${selected_nodes},${node_key}"
                             else
-                                selected_nodes="${node_id}:${node_type}"
+                                selected_nodes="${node_key}"
                             fi
                         else
-                            red "无效的选择: $sel"
+                            red "无效的序号: $sel"
                             exit
                         fi
                     done
@@ -1465,7 +1690,7 @@ checkConfig() {
                 fi
 
                 echo ""
-                green "已选择节点: $selected_nodes"
+                green "已选择 $(echo "$selected_nodes" | tr ',' '\n' | wc -l) 个节点"
                 ;;
             3)
                 # 按协议批量上传
@@ -1475,12 +1700,13 @@ checkConfig() {
                 echo "2. vless"
                 echo "3. trojan"
                 echo "4. shadowsocks"
-                echo "5. hysteria"
-                echo "6. tuic"
-                echo "7. anytls"
-                echo "8. 所有协议"
+                echo "5. hysteria（旧节点）"
+                echo "6. hysteria2（V2node）"
+                echo "7. tuic"
+                echo "8. anytls"
+                echo "9. 所有协议"
                 echo ""
-                read -p "请选择协议 (1-8): " protocol_choice
+                read -p "请选择协议 (1-9): " protocol_choice
 
                 case $protocol_choice in
                     1) target_protocol="vmess" ;;
@@ -1488,9 +1714,10 @@ checkConfig() {
                     3) target_protocol="trojan" ;;
                     4) target_protocol="shadowsocks" ;;
                     5) target_protocol="hysteria" ;;
-                    6) target_protocol="tuic" ;;
-                    7) target_protocol="anytls" ;;
-                    8) target_protocol="all" ;;
+                    6) target_protocol="hysteria2" ;;
+                    7) target_protocol="tuic" ;;
+                    8) target_protocol="anytls" ;;
+                    9) target_protocol="all" ;;
                     *)
                         red "无效的选择"
                         exit
@@ -1501,7 +1728,11 @@ checkConfig() {
                 if [[ "$target_protocol" == "all" ]]; then
                     protocol_nodes=$(echo "$all_nodes_response" | jq -r '.data[] | "\(.id):\(.type)"')
                 else
-                    protocol_nodes=$(echo "$all_nodes_response" | jq -r ".data[] | select(.type == \"${target_protocol}\") | \"\(.id):\(.type)\"")
+                    protocol_nodes=$(echo "$all_nodes_response" | jq -r --arg protocol "$target_protocol" '
+                        .data[]
+                        | select(.type == $protocol or (.type == "v2node" and .protocol == $protocol))
+                        | "\(.id):\(.type)"
+                    ')
                 fi
 
                 if [[ -z "$protocol_nodes" ]]; then
@@ -1519,23 +1750,25 @@ checkConfig() {
         esac
 
         # 保存配置
-        echo "${panel_address}" > /root/.v2board.config
-        echo "${auth_data}" >> /root/.v2board.config
-        echo "${selected_nodes}" >> /root/.v2board.config
-        echo "${upload_mode}" >> /root/.v2board.config
-        echo "${auth_method:-header}" >> /root/.v2board.config
-        echo "${secure_path}" >> /root/.v2board.config
+        echo "${panel_address}" > /root/.media_unlock.config
+        echo "${auth_data}" >> /root/.media_unlock.config
+        echo "${selected_nodes}" >> /root/.media_unlock.config
+        echo "${upload_mode}" >> /root/.media_unlock.config
+        echo "${auth_method:-header}" >> /root/.media_unlock.config
+        echo "${secure_path}" >> /root/.media_unlock.config
+        echo "${panel_type}" >> /root/.media_unlock.config
+        echo "${api_version}" >> /root/.media_unlock.config
 
-        green "配置已保存到 /root/.v2board.config"
+        green "配置已保存到 /root/.media_unlock.config"
     }
 
-    if [[ ! -e "/root/.v2board.config" ]];then
+    if [[ ! -e "/root/.media_unlock.config" ]];then
         getConfig
     fi
 }
 
 postData() {
-    if [[ ! -e "/root/.v2board.config" ]];then
+    if [[ ! -e "/root/.media_unlock.config" ]];then
         echo -e "$(red) 缺少配置文件"
         exit
     fi
@@ -1544,12 +1777,21 @@ postData() {
         exit
     fi
 
-    panel_address=$(sed -n 1p /root/.v2board.config)
-    auth_data=$(sed -n 2p /root/.v2board.config)
-    selected_nodes=$(sed -n 3p /root/.v2board.config)
-    upload_mode=$(sed -n 4p /root/.v2board.config)
-    auth_method=$(sed -n 5p /root/.v2board.config)
-    secure_path=$(sed -n 6p /root/.v2board.config)
+    panel_address=$(sed -n 1p /root/.media_unlock.config)
+    auth_data=$(sed -n 2p /root/.media_unlock.config)
+    selected_nodes=$(sed -n 3p /root/.media_unlock.config)
+    upload_mode=$(sed -n 4p /root/.media_unlock.config)
+    auth_method=$(sed -n 5p /root/.media_unlock.config)
+    secure_path=$(sed -n 6p /root/.media_unlock.config)
+    panel_type=$(sed -n 7p /root/.media_unlock.config)
+    api_version=$(sed -n 8p /root/.media_unlock.config)
+    
+    # 兼容旧配置（如果没有面板类型，默认为 v2board）
+    if [[ -z "$panel_type" ]]; then
+        panel_type="v2board"
+        api_version="v1"
+        log "WARN" "使用默认面板类型: v2board"
+    fi
 
     # 检查文件是否为空
     if [[ ! -s "/root/media_test_tpl.json" ]]; then
@@ -1558,10 +1800,10 @@ postData() {
         runCheck
     fi
 
-    log "INFO" "正在获取所有节点信息..."
+    log "INFO" "正在获取所有节点信息...（面板类型: ${panel_type}）"
 
     # 获取所有节点信息
-    api_url="${panel_address}/api/v1/${secure_path}/server/manage/getNodes"
+    api_url="${panel_address}/api/${api_version}/${secure_path}/server/manage/getNodes"
     if [[ "$auth_method" == "param" ]]; then
         all_servers_response=$(curl -s "${api_url}?auth_data=${auth_data}")
     else
@@ -1584,45 +1826,84 @@ postData() {
     # 生成解锁标签函数
     generateUnlockTags() {
 
-        # 解析解锁结果并生成标签（智能判断是否需要上传）
+        # 解析解锁结果并生成标签（智能判断是否需要上传，格式为 "服务名 (地区)" 不含Yes）
         netflix_status=$(echo "$unlock_data" | jq -r '.Netflix // "Unknown"')
         echo "Netflix状态: $netflix_status"
         # Netflix：Yes状态或包含地区代码的都上传（如(HK)、(US)等）
         if [[ "$netflix_status" =~ ^Yes ]] || [[ "$netflix_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("Netflix:$netflix_status")
-            echo "添加标签: Netflix:$netflix_status"
+            if [[ "$netflix_status" =~ \(([A-Z]{2})\) ]]; then
+                netflix_tag="Netflix (${BASH_REMATCH[1]})"
+            else
+                netflix_tag="Netflix"
+            fi
+            unlock_tags+=("$netflix_tag")
+            echo "添加标签: $netflix_tag"
         fi
 
         disney_status=$(echo "$unlock_data" | jq -r '.DisneyPlus // "Unknown"')
         echo "Disney+状态: $disney_status"
         # Disney+：Yes状态或包含地区代码的都上传
         if [[ "$disney_status" =~ ^Yes ]] || [[ "$disney_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("Disney+:$disney_status")
-            echo "添加标签: Disney+:$disney_status"
+            if [[ "$disney_status" =~ \(([A-Z]{2})\) ]]; then
+                disney_tag="Disney+ (${BASH_REMATCH[1]})"
+            else
+                disney_tag="Disney+"
+            fi
+            unlock_tags+=("$disney_tag")
+            echo "添加标签: $disney_tag"
         fi
 
         youtube_status=$(echo "$unlock_data" | jq -r '.YouTube // "Unknown"')
         echo "YouTube状态: $youtube_status"
         # YouTube特殊处理：Yes状态或包含地区代码的都上传（如(CN)表示送中）
         if [[ "$youtube_status" =~ ^Yes ]] || [[ "$youtube_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("YouTube:$youtube_status")
-            echo "添加标签: YouTube:$youtube_status"
+            if [[ "$youtube_status" =~ \(([A-Z]{2})\) ]]; then
+                youtube_tag="YouTube (${BASH_REMATCH[1]})"
+            else
+                youtube_tag="YouTube"
+            fi
+            unlock_tags+=("$youtube_tag")
+            echo "添加标签: $youtube_tag"
         fi
 
         openai_status=$(echo "$unlock_data" | jq -r '.OpenAI // "Unknown"')
         echo "OpenAI状态: $openai_status"
         # OpenAI：Yes状态或包含地区代码的都上传
         if [[ "$openai_status" =~ ^Yes ]] || [[ "$openai_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("OpenAI:$openai_status")
-            echo "添加标签: OpenAI:$openai_status"
+            if [[ "$openai_status" =~ \(([A-Z]{2})\) ]]; then
+                openai_tag="OpenAI (${BASH_REMATCH[1]})"
+            else
+                openai_tag="OpenAI"
+            fi
+            unlock_tags+=("$openai_tag")
+            echo "添加标签: $openai_tag"
+        fi
+
+        gemini_status=$(echo "$unlock_data" | jq -r '.Gemini // "Unknown"')
+        echo "Gemini状态: $gemini_status"
+        # Gemini：Yes状态或包含地区代码的都上传，格式为 "Gemini (KOR)" 而非 "Gemini:Yes (KOR)"
+        if [[ "$gemini_status" =~ ^Yes ]] || [[ "$gemini_status" =~ \([A-Z]{2,3}\) ]]; then
+            # 提取地区代码，如果有的话只显示 "Gemini (KOR)"
+            if [[ "$gemini_status" =~ \(([A-Z]{2,3})\) ]]; then
+                gemini_tag="Gemini (${BASH_REMATCH[1]})"
+            else
+                gemini_tag="Gemini"
+            fi
+            unlock_tags+=("$gemini_tag")
+            echo "添加标签: $gemini_tag"
         fi
 
         bahamut_status=$(echo "$unlock_data" | jq -r '.BahamutAnime // "Unknown"')
         echo "动画疯状态: $bahamut_status"
         # Bahamut：Yes状态或包含地区代码的都上传
         if [[ "$bahamut_status" =~ ^Yes ]] || [[ "$bahamut_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("Bahamut:$bahamut_status")
-            echo "添加标签: Bahamut:$bahamut_status"
+            if [[ "$bahamut_status" =~ \(([A-Z]{2})\) ]]; then
+                bahamut_tag="Bahamut (${BASH_REMATCH[1]})"
+            else
+                bahamut_tag="Bahamut"
+            fi
+            unlock_tags+=("$bahamut_tag")
+            echo "添加标签: $bahamut_tag"
         fi
 
         # 添加其他检测到的解锁服务
@@ -1630,16 +1911,39 @@ postData() {
         echo "Discovery+状态: $discovery_status"
         # Discovery+：Yes状态或包含地区代码的都上传
         if [[ "$discovery_status" =~ ^Yes ]] || [[ "$discovery_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("Discovery+:$discovery_status")
-            echo "添加标签: Discovery+:$discovery_status"
+            if [[ "$discovery_status" =~ \(([A-Z]{2})\) ]]; then
+                discovery_tag="Discovery+ (${BASH_REMATCH[1]})"
+            else
+                discovery_tag="Discovery+"
+            fi
+            unlock_tags+=("$discovery_tag")
+            echo "添加标签: $discovery_tag"
         fi
 
         paramount_status=$(echo "$unlock_data" | jq -r '.ParamountPlus // "Unknown"')
         echo "Paramount+状态: $paramount_status"
         # Paramount+：Yes状态或包含地区代码的都上传
         if [[ "$paramount_status" =~ ^Yes ]] || [[ "$paramount_status" =~ \([A-Z]{2}\) ]]; then
-            unlock_tags+=("Paramount+:$paramount_status")
-            echo "添加标签: Paramount+:$paramount_status"
+            if [[ "$paramount_status" =~ \(([A-Z]{2})\) ]]; then
+                paramount_tag="Paramount+ (${BASH_REMATCH[1]})"
+            else
+                paramount_tag="Paramount+"
+            fi
+            unlock_tags+=("$paramount_tag")
+            echo "添加标签: $paramount_tag"
+        fi
+
+        tiktok_status=$(echo "$unlock_data" | jq -r '.TikTok // "Unknown"')
+        echo "TikTok状态: $tiktok_status"
+        # TikTok：Yes状态或包含地区代码的都上传
+        if [[ "$tiktok_status" =~ ^Yes ]] || [[ "$tiktok_status" =~ \([A-Z]{2}\) ]]; then
+            if [[ "$tiktok_status" =~ \(([A-Z]{2})\) ]]; then
+                tiktok_tag="TikTok (${BASH_REMATCH[1]})"
+            else
+                tiktok_tag="TikTok"
+            fi
+            unlock_tags+=("$tiktok_tag")
+            echo "添加标签: $tiktok_tag"
         fi
 
         echo "生成的解锁标签数组: ${unlock_tags[@]}"
@@ -1655,13 +1959,22 @@ postData() {
         local node_id=$1
         local node_type=$2
 
+        if ! [[ "$node_id" =~ ^[0-9]+$ ]] || ! [[ "$node_type" =~ ^[a-z0-9_]+$ ]]; then
+            red "节点ID或节点类型格式无效: ${node_id}:${node_type}"
+            return 1
+        fi
+
         echo ""
         echo "=========================================="
         echo "正在处理节点: ID=$node_id, 类型=$node_type"
         echo "=========================================="
 
         # 获取当前节点信息
-        current_server=$(echo "$all_servers_response" | jq -r ".data[] | select(.id == ${node_id} and .type == \"${node_type}\")")
+        current_server=$(echo "$all_servers_response" | jq -c \
+            --argjson node_id "$node_id" \
+            --arg node_type "$node_type" \
+            '.data[] | select(.id == $node_id and .type == $node_type)' \
+            | head -n 1)
 
         if [[ -z "$current_server" ]]; then
             red "未找到节点 (ID: ${node_id}, 类型: ${node_type})"
@@ -1680,7 +1993,8 @@ postData() {
         echo "当前tags: $current_tags"
 
         # 删除现有的解锁相关标签，保留用户自定义标签（每日更新，保持最新状态）
-        filtered_tags=$(echo "$current_tags" | jq '[.[] | select(. | test("(Netflix|Disney\\+|YouTube|OpenAI|Bahamut|Discovery\\+|Paramount\\+):") | not)]')
+        # 匹配新格式：Netflix (HK)、Disney+ (US) 等，不再匹配旧格式的冒号格式
+        filtered_tags=$(echo "$current_tags" | jq '[.[] | select(. | test("^(Netflix|Disney\\+|YouTube|OpenAI|Gemini|Bahamut|Discovery\\+|Paramount\\+|TikTok)( \\([A-Z]{2,3}\\))?$") | not)]')
         echo "删除旧解锁标签后的用户标签: $filtered_tags"
 
         # 添加新的解锁标签
@@ -1694,9 +2008,16 @@ postData() {
         # 提取所有必需的字段
         server_data=$(echo "$current_server" | jq --argjson new_tags "$new_tags" '. + {tags: $new_tags}')
 
-        # 调用V2Board现有的服务器保存API
-        save_url="${panel_address}/api/v1/${secure_path}/server/${node_type}/save"
-        echo "保存URL: $save_url"
+        # 根据面板类型调用不同的服务器保存API
+        if [[ "$panel_type" == "xboard" ]]; then
+            # Xboard 使用统一的保存接口
+            save_url="${panel_address}/api/${api_version}/${secure_path}/server/manage/save"
+            echo "保存URL (Xboard): $save_url"
+        else
+            # V2Board 按 type 保存；新版统一节点的 type=v2node，因此会使用 /server/v2node/save。
+            save_url="${panel_address}/api/${api_version}/${secure_path}/server/${node_type}/save"
+            echo "保存URL (V2Board): $save_url"
+        fi
 
         if [[ "$auth_method" == "param" ]]; then
             server_data_with_auth=$(echo "$server_data" | jq --arg auth_data "$auth_data" '. + {auth_data: $auth_data}')
@@ -1798,6 +2119,8 @@ runCheck() {
     MediaUnlockTest_ParamountPlus 4
     MediaUnlockTest_BahamutAnime 4
     OpenAiUnlockTest
+    MediaUnlockTest_Gemini
+    MediaUnlockTest_TikTok
     MediaUnlockTest_YouTube_Premium 4
     log "INFO" "流媒体解锁检测完成"
 }
